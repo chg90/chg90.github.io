@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>以太坊1.9挖矿启动过程源码阅读 | 曹欢的博客</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="以太坊1.9挖矿启动过程源码阅读 | 曹欢的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="最近看了使用go调用智能合约的方式，感觉比truffle用起来更加习惯，部署合约不是很方便，但是调用合约更方便 在remix上部署好合约之后，就可以使用golang调用了 1，下载以太坊源码并编译abigen工具包 abigen在go-ethereum\cmd\abigen目录下，使用go build编译并打包，复制到$GOPATH目录下 2，部署智能合约 随意部署一个erc20合约，把abi拷贝">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用go调用智能合约">
+<meta property="og:url" content="https://caohuan.tech/2021/09/06/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BD%BF%E7%94%A8go%E8%B0%83%E7%94%A8%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/index.html">
+<meta property="og:site_name" content="曹欢的博客">
+<meta property="og:description" content="最近看了使用go调用智能合约的方式，感觉比truffle用起来更加习惯，部署合约不是很方便，但是调用合约更方便 在remix上部署好合约之后，就可以使用golang调用了 1，下载以太坊源码并编译abigen工具包 abigen在go-ethereum\cmd\abigen目录下，使用go build编译并打包，复制到$GOPATH目录下 2，部署智能合约 随意部署一个erc20合约，把abi拷贝">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/jpeg;base64,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">
+<meta property="article:published_time" content="2021-09-06T02:59:04.000Z">
+<meta property="article:modified_time" content="2021-09-08T03:23:43.000Z">
+<meta property="article:author" content="caohuan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/jpeg;base64,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">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="false" />
+</div>
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.jpg" />
+</a>
+<div class="author">
+    <span>caohuan</span>
+</div>
+
+<div class="icon">
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active" data-rel="全部文章">全部文章<small>(55)</small></div></li>
+    
+        
+            
+            <li><div data-rel="以太坊">以太坊<small>(9)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="defi">defi<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="fabric">fabric<small>(13)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="区块链">区块链<small>(7)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="tendermint">tendermint<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="golang">golang<small>(9)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="java">java<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="linux">linux<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="数据库">数据库<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="55">
+<input type="hidden" id="yelog_site_word_count" value="71.6k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" />
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>零知识证明</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>路印协议</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>以太坊</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>beego</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>defi</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>fabric</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>java</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>tendermint</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/09/06/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BD%BF%E7%94%A8go%E8%B0%83%E7%94%A8%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用go调用智能合约">使用go调用智能合约</span>
+            <span class="post-date" title="2021-09-06 10:59:04">2021/09/06</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/08/21/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%94%9F%E6%80%81(2)/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="创建自己的以太坊生态(2)">创建自己的以太坊生态(2)</span>
+            <span class="post-date" title="2021-08-21 18:50:00">2021/08/21</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/08/14/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%94%9F%E6%80%81(1)/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="创建自己的以太坊生态(1)">创建自己的以太坊生态(1)</span>
+            <span class="post-date" title="2021-08-14 17:08:59">2021/08/14</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/24/defi/uniswapV2(4)-%E5%91%A8%E8%BE%B9%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(4)-周边源码解析">uniswapV2(4)-周边源码解析</span>
+            <span class="post-date" title="2021-07-24 15:28:46">2021/07/24</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/20/defi/uniswapV2(3)-%E6%A0%B8%E5%BF%83%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(3)-源码解析">uniswapV2(3)-源码解析</span>
+            <span class="post-date" title="2021-07-20 09:30:01">2021/07/20</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/19/defi/uniswapV2(2)-%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91-/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(2)-运行逻辑">uniswapV2(2)-运行逻辑</span>
+            <span class="post-date" title="2021-07-19 18:55:32">2021/07/19</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/18/defi/uniswapV2(1)-%E7%99%BD%E7%9A%AE%E4%B9%A6%E7%BF%BB%E8%AF%91/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(1)-白皮书">uniswapV2(1)-白皮书</span>
+            <span class="post-date" title="2021-07-18 11:00:05">2021/07/18</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2021/05/26/%E5%8C%BA%E5%9D%97%E9%93%BE/filecoin%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="filecoin环境搭建">filecoin环境搭建</span>
+            <span class="post-date" title="2021-05-26 20:40:46">2021/05/26</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/04/15/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9%E5%8C%BA%E5%9D%97%E5%90%8C%E6%AD%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9区块同步源码解析">以太坊1.9区块同步源码解析</span>
+            <span class="post-date" title="2021-04-15 11:34:01">2021/04/15</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/03/18/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9consensus%E5%8C%85%E8%A7%A3%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9consensus包解析">以太坊1.9consensus包解析</span>
+            <span class="post-date" title="2021-03-18 16:31:11">2021/03/18</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/03/11/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9%E6%8C%96%E7%9F%BF%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9挖矿启动过程源码阅读">以太坊1.9挖矿启动过程源码阅读</span>
+            <span class="post-date" title="2021-03-11 10:57:33">2021/03/11</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/02/25/linux/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="git常用命令记录">git常用命令记录</span>
+            <span class="post-date" title="2021-02-25 19:14:01">2021/02/25</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/08/24/golang/%E5%88%A9%E7%94%A8reflect%E5%8C%85%E6%8A%8Astruct%E8%BD%AC-string/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="利用reflect包把struct转[]string">利用reflect包把struct转[]string</span>
+            <span class="post-date" title="2020-08-24 18:17:46">2020/08/24</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/07/18/fabric/fabric-go-sdk%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fabric-go-sdk的使用">fabric-go-sdk的使用</span>
+            <span class="post-date" title="2020-07-18 11:48:41">2020/07/18</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/07/18/fabric/fabric%E5%AD%A6%E4%B9%A0(11)%E2%80%94%E2%80%94fabric-ca%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(11)——fabric-ca的使用">fabric学习(11)——fabric-ca的使用</span>
+            <span class="post-date" title="2020-07-18 11:48:13">2020/07/18</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/07/13/linux/%E6%9F%A5%E7%9C%8B%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="查看机器配置">查看机器配置</span>
+            <span class="post-date" title="2020-07-13 18:11:11">2020/07/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/06/25/golang/beego%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%B7%AF%E7%94%B1%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/"
+           data-tag="beego"
+           data-author="" >
+            <span class="post-title" title="beego中设置路由的几种方式">beego中设置路由的几种方式</span>
+            <span class="post-date" title="2020-06-25 10:01:08">2020/06/25</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/06/11/linux/%E4%BF%AE%E6%94%B9%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%99%BB%E5%BD%95%E6%96%B9%E5%BC%8F%E4%B8%BA%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="修改亚马逊登录方式为密码登录">修改亚马逊登录方式为密码登录</span>
+            <span class="post-date" title="2020-06-11 18:01:05">2020/06/11</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/31/fabric/fabric%E5%AD%A6%E4%B9%A0(10)%E2%80%94%E2%80%94%E5%9C%A83%E4%B8%AA%E7%BB%84%E7%BB%87%E5%9F%BA%E7%A1%80%E4%B8%8A%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AAchannel/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(10)——在3个组织基础上新建一个channel">fabric学习(10)——在3个组织基础上新建一个channel</span>
+            <span class="post-date" title="2020-05-31 23:50:50">2020/05/31</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/25/fabric/fabric%E5%AD%A6%E4%B9%A0(9)%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8CouchDB%E5%8F%8A%E7%B4%A2%E5%BC%95%E7%9A%84%E6%93%8D%E4%BD%9C/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(9)——使用CouchDB及索引的操作">fabric学习(9)——使用CouchDB及索引的操作</span>
+            <span class="post-date" title="2020-05-25 13:14:51">2020/05/25</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/22/fabric/fabric%E5%AD%A6%E4%B9%A0(8)%E2%80%94%E2%80%94chaincode/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(8)——chaincode">fabric学习(8)——chaincode</span>
+            <span class="post-date" title="2020-05-22 15:04:56">2020/05/22</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/03/09/fabric/fabric%E5%AD%A6%E4%B9%A0(7)%E2%80%94%E2%80%94%E6%9B%B4%E6%96%B0channel%E9%85%8D%E7%BD%AE/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(7)——更新channel配置">fabric学习(7)——更新channel配置</span>
+            <span class="post-date" title="2020-03-09 20:20:10">2020/03/09</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/03/03/fabric/fabric%E5%AD%A6%E4%B9%A0(6)%E2%80%94%E2%80%94%E6%B7%BB%E5%8A%A0%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84(2)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(6)——添加组织机构(2)">fabric学习(6)——添加组织机构(2)</span>
+            <span class="post-date" title="2020-03-03 14:25:01">2020/03/03</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/26/fabric/fabric%E5%AD%A6%E4%B9%A0(5)%E2%80%94%E2%80%94%E6%B7%BB%E5%8A%A0%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84(1)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(5)——添加组织机构(1)">fabric学习(5)——添加组织机构(1)</span>
+            <span class="post-date" title="2020-02-26 19:35:11">2020/02/26</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/23/fabric/fabric%E5%AD%A6%E4%B9%A0(4)%E2%80%94%E2%80%94%E5%9C%A8%E6%96%B0%E5%88%9B%E5%BB%BA%E7%9A%84%E8%81%94%E7%9B%9F%E4%B8%AD%E5%88%9B%E5%BB%BAchannel/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(4)——在新创建的联盟中创建channel">fabric学习(4)——在新创建的联盟中创建channel</span>
+            <span class="post-date" title="2020-02-23 09:40:01">2020/02/23</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/22/fabric/fabric%E5%AD%A6%E4%B9%A0(3)%E2%80%94%E2%80%94%E5%88%9B%E5%BB%BA%E8%81%94%E7%9B%9F/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(3)——创建联盟">fabric学习(3)——创建联盟</span>
+            <span class="post-date" title="2020-02-22 15:47:48">2020/02/22</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/19/fabric/fabric%E5%AD%A6%E4%B9%A0(2)%E2%80%94%E2%80%94%E4%B8%8D%E4%BD%BF%E7%94%A8byfn%E6%90%AD%E5%BB%BAfabric%E7%BD%91%E7%BB%9C(2)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(2)——不使用byfn搭建fabric网络(2)">fabric学习(2)——不使用byfn搭建fabric网络(2)</span>
+            <span class="post-date" title="2020-02-19 13:30:01">2020/02/19</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/18/fabric/fabric%E5%AD%A6%E4%B9%A0(1)%E2%80%94%E2%80%94%E4%B8%8D%E4%BD%BF%E7%94%A8byfn%E6%90%AD%E5%BB%BAfabric%E7%BD%91%E7%BB%9C(1)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(1)——不使用byfn搭建fabric网络(1)">fabric学习(1)——不使用byfn搭建fabric网络(1)</span>
+            <span class="post-date" title="2020-02-18 11:47:58">2020/02/18</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/12/10/golang/gomod%E3%80%81govendor%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gomod、govendor的使用">gomod、govendor的使用</span>
+            <span class="post-date" title="2019-12-10 11:46:56">2019/12/10</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2019/11/30/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BF%AE%E6%94%B9%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%9A%84%E5%9C%B0%E5%9D%80%E6%80%9D%E8%B7%AF/"
+           data-tag="以太坊"
+           data-author="" >
+            <span class="post-title" title="修改以太坊的地址思路">修改以太坊的地址思路</span>
+            <span class="post-date" title="2019-11-30 18:00:32">2019/11/30</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/11/11/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%9B%B6%E7%9F%A5%E8%AF%86%E8%AF%81%E6%98%8E/"
+           data-tag="零知识证明"
+           data-author="" >
+            <span class="post-title" title="零知识证明">零知识证明</span>
+            <span class="post-date" title="2019-11-11 21:16:00">2019/11/11</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/10/28/%E5%8C%BA%E5%9D%97%E9%93%BE/%E8%B7%AF%E5%8D%B0%E5%8D%8F%E8%AE%AE/"
+           data-tag="路印协议"
+           data-author="" >
+            <span class="post-title" title="路印协议">路印协议</span>
+            <span class="post-date" title="2019-10-28 13:31:35">2019/10/28</span>
+        </a>
+        
+        <a  class="全部文章 tendermint "
+           href="/2019/09/10/tendermint/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%B8%89)%E8%87%AA%E5%AE%9A%E4%B9%89DeliverTx%E7%9A%84%E5%93%8D%E5%BA%94/"
+           data-tag="tendermint"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(三)自定义DeliverTx的响应">tendermint提供的RPC接口(三)自定义DeliverTx的响应</span>
+            <span class="post-date" title="2019-09-10 18:21:01">2019/09/10</span>
+        </a>
+        
+        <a  class="全部文章 tendermint "
+           href="/2019/09/09/tendermint/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%BA%8C)/"
+           data-tag="tendermint"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(二)">tendermint提供的RPC接口(二)</span>
+            <span class="post-date" title="2019-09-09 18:09:33">2019/09/09</span>
+        </a>
+        
+        <a  class="全部文章 tendermint "
+           href="/2019/09/08/tendermint/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%B8%80)/"
+           data-tag="tendermint"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(一)">tendermint提供的RPC接口(一)</span>
+            <span class="post-date" title="2019-09-08 17:54:23">2019/09/08</span>
+        </a>
+        
+        <a  class="全部文章 tendermint "
+           href="/2019/09/06/tendermint/windows%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8tendermint/"
+           data-tag="tendermint"
+           data-author="" >
+            <span class="post-title" title="windows环境使用tendermint">windows环境使用tendermint</span>
+            <span class="post-date" title="2019-09-06 11:52:00">2019/09/06</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/08/28/golang/sync.Mutex%E4%BA%92%E6%96%A5%E9%94%81%E7%9A%84%E7%94%A8%E6%B3%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sync.Mutex互斥锁的用法">sync.Mutex互斥锁的用法</span>
+            <span class="post-date" title="2019-08-28 11:10:01">2019/08/28</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/08/24/golang/defer%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="defer的执行顺序">defer的执行顺序</span>
+            <span class="post-date" title="2019-08-24 18:30:39">2019/08/24</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/07/12/golang/Go%E8%AF%AD%E8%A8%80%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BA%93urfave-cli%E7%AE%80%E4%BB%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Go语言命令行库urfave/cli简介">Go语言命令行库urfave/cli简介</span>
+            <span class="post-date" title="2019-07-12 20:49:46">2019/07/12</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2019/07/12/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E9%98%BB%E6%AD%A2%E6%97%A5%E8%9A%80%E6%94%BB%E5%87%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊阻止日蚀攻击">以太坊阻止日蚀攻击</span>
+            <span class="post-date" title="2019-07-12 20:49:46">2019/07/12</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/05/23/golang/golang%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="golang时间戳转换">golang时间戳转换</span>
+            <span class="post-date" title="2019-05-23 14:32:13">2019/05/23</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/02/28/golang/Go%E8%A7%84%E8%8C%83/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Go规范">Go规范</span>
+            <span class="post-date" title="2019-02-28 11:30:10">2019/02/28</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/01/11/golang/fmt%E6%A0%BC%E5%BC%8F%E5%8D%A0%E4%BD%8D%E7%AC%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fmt格式占位符">fmt格式占位符</span>
+            <span class="post-date" title="2019-01-11 15:41:31">2019/01/11</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2018/09/14/%E4%BB%A5%E5%A4%AA%E5%9D%8A/solidity%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/"
+           data-tag="以太坊"
+           data-author="" >
+            <span class="post-title" title="solidity知识点总结">solidity知识点总结</span>
+            <span class="post-date" title="2018-09-14 21:24:04">2018/09/14</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/07/11/%E5%8C%BA%E5%9D%97%E9%93%BE/PBFT%E6%AF%8F%E4%B8%AA%E6%AD%A5%E9%AA%A4%E7%9A%84%E8%AF%A6%E7%BB%86%E6%B6%88%E6%81%AF%E8%A6%81%E7%B4%A0%E5%92%8C%E7%AD%BE%E5%90%8D%E5%86%85%E5%AE%B9/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="PBFT每个步骤的详细消息要素和签名内容">PBFT每个步骤的详细消息要素和签名内容</span>
+            <span class="post-date" title="2018-07-11 16:03:46">2018/07/11</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/05/21/%E5%8C%BA%E5%9D%97%E9%93%BE/%E6%AF%94%E7%89%B9%E5%B8%81%E4%BB%A5%E5%A4%AA%E5%9D%8Aeos%E5%9C%B0%E5%9D%80%E7%94%9F%E6%88%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="比特币以太坊eos地址生成">比特币以太坊eos地址生成</span>
+            <span class="post-date" title="2018-05-21 15:06:12">2018/05/21</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2018/04/03/fabric/fabric%E6%A3%80%E6%9F%A5%E7%82%B9(checkpoint)%E5%88%86%E6%9E%90/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric检查点(checkpoint)分析">fabric检查点(checkpoint)分析</span>
+            <span class="post-date" title="2018-04-03 11:27:55">2018/04/03</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/03/28/%E5%8C%BA%E5%9D%97%E9%93%BE/%E5%90%84%E7%A7%8D%E4%B8%BB%E6%B5%81%E9%93%BE%E7%9A%84HASH%E7%AE%97%E6%B3%95%E3%80%81PKI%E5%8F%8A%E7%A7%98%E9%92%A5%E9%95%BF%E5%BA%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="各种主流链的HASH算法、PKI及秘钥长度">各种主流链的HASH算法、PKI及秘钥长度</span>
+            <span class="post-date" title="2018-03-28 19:17:47">2018/03/28</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/03/22/%E5%8C%BA%E5%9D%97%E9%93%BE/%E6%AF%94%E7%89%B9%E5%B8%81%E3%80%81%E4%BB%A5%E5%A4%AA%E5%9D%8A%E3%80%81%E6%AF%94%E7%89%B9%E8%82%A1%E6%97%B6%E9%97%B4%E8%AF%AF%E5%B7%AE%E5%A4%84%E7%90%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="比特币、以太坊、比特股时间误差处理">比特币、以太坊、比特股时间误差处理</span>
+            <span class="post-date" title="2018-03-22 16:29:07">2018/03/22</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2017/07/11/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux常用命令记录">linux常用命令记录</span>
+            <span class="post-date" title="2017-07-11 17:15:21">2017/07/11</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2017/05/23/%E6%95%B0%E6%8D%AE%E5%BA%93/orcale%E5%88%A0%E9%99%A4%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E4%B8%8B%E6%89%80%E6%9C%89%E7%9A%84%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="orcale删除当前用户下所有的表">orcale删除当前用户下所有的表</span>
+            <span class="post-date" title="2017-05-23 15:44:01">2017/05/23</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2017/04/19/%E6%95%B0%E6%8D%AE%E5%BA%93/oracle%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="oracle控制台常用命令">oracle控制台常用命令</span>
+            <span class="post-date" title="2017-04-19 17:17:09">2017/04/19</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2016/10/25/%E6%95%B0%E6%8D%AE%E5%BA%93/sqlserver%E8%A7%A3%E5%86%B3%E9%94%81%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sqlserver解决锁表">sqlserver解决锁表</span>
+            <span class="post-date" title="2016-10-25 10:21:43">2016/10/25</span>
+        </a>
+        
+        <a  class="全部文章 java "
+           href="/2016/10/20/java/eclipse%E6%93%8D%E4%BD%9C/"
+           data-tag="java"
+           data-author="" >
+            <span class="post-title" title="eclipse操作">eclipse操作</span>
+            <span class="post-date" title="2016-10-20 11:07:48">2016/10/20</span>
+        </a>
+        
+        <a  class="全部文章 java "
+           href="/2016/08/25/java/keytool%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6%E8%AF%B7%E6%B1%82%E6%96%87%E4%BB%B6(.csr)/"
+           data-tag="java"
+           data-author="" >
+            <span class="post-title" title="keytool生成证书请求文件（.csr）">keytool生成证书请求文件（.csr）</span>
+            <span class="post-date" title="2016-08-25 13:07:48">2016/08/25</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-以太坊/以太坊1.9挖矿启动过程源码阅读" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">以太坊1.9挖矿启动过程源码阅读</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="以太坊">以太坊</a>
+            
+        </span>
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2021-07-22 17:43:00'>2021-03-11 10:57</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:3k</span>
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%8CmakeFullNode"><span class="toc-text">1，makeFullNode</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-newWorker"><span class="toc-text">1.1 newWorker</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-1-mainLoop-%E7%9B%91%E5%90%AC%E7%9A%84channel"><span class="toc-text">1.1.1 mainLoop()监听的channel</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#newWorkCh"><span class="toc-text">newWorkCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#chainSideCh"><span class="toc-text">chainSideCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#txsCh"><span class="toc-text">txsCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#exitCh"><span class="toc-text">exitCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#txsSub-Err"><span class="toc-text">txsSub.Err()</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#chainHeadSub-Err"><span class="toc-text">chainHeadSub.Err()</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#chainSideSub-Err"><span class="toc-text">chainSideSub.Err()</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-2-newWorkLoop-%E7%9B%91%E5%90%AC%E7%9A%84channel"><span class="toc-text">1.1.2 newWorkLoop()监听的channel</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#startCh-amp-chainHeadCh"><span class="toc-text">startCh &amp; chainHeadCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#timer-C"><span class="toc-text">timer.C</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#resubmitIntervalCh"><span class="toc-text">resubmitIntervalCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#resubmitAdjustCh"><span class="toc-text">resubmitAdjustCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#exitCh-1"><span class="toc-text">exitCh</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-3-resultLoop-%E7%9B%91%E5%90%AC%E7%9A%84channel"><span class="toc-text">1.1.3 resultLoop()监听的channel</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#resultCh"><span class="toc-text">resultCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#exitCh-2"><span class="toc-text">exitCh</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-4-taskLoop-%E7%9B%91%E5%90%AC%E7%9A%84channel"><span class="toc-text">1.1.4 taskLoop()监听的channel</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#taskCh"><span class="toc-text">taskCh</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#exitCh-3"><span class="toc-text">exitCh</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-miner-update"><span class="toc-text">1.2 miner.update()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-startNode"><span class="toc-text">2,startNode</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前阅读过以太坊1.7.x版本的源码，现在升级到了1.9.25，很多源码都做了很大的改动，网上还没有相关的源码阅读，因此决定自己分享一下。</p>
+<p>本文介绍挖矿相关的源码，其余部分不做赘述。</p>
+<p>geth启动时，进入的是<code>cmd/geth/main.go</code>中的main方法，执行main方法之前会先执行init方法，init方法中加载了很多命令行参数，关于命令行参数的介绍：<a href="https://caohuan.tech/2019/07/12/golang/Go%E8%AF%AD%E8%A8%80%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BA%93urfave-cli%E7%AE%80%E4%BB%8B/">Go语言命令行库urfave/cli简介</a> 。</p>
+<p>启动geth时，如果没有加console参数，会执行main.go中的geth方法：</p>
+<pre><code class="golang">func geth(ctx *cli.Context) error &#123;
+   if args := ctx.Args(); len(args) &gt; 0 &#123;
+      return fmt.Errorf(&quot;invalid command: %q&quot;, args[0])
+   &#125;
+
+   prepare(ctx)//检查运行环境及机器配置等
+   stack, backend := makeFullNode(ctx)//stack就是node实例，backend是service
+   defer stack.Close()
+
+   startNode(ctx, stack, backend)
+   stack.Wait()
+   return nil
+&#125;
+</code></pre>
+<p>如果加了console参数，会执行</p>
+<p>cmd/geth/consolecmd.go中的localConsole方法：</p>
+<pre><code class="golang">func localConsole(ctx *cli.Context) error &#123;
+   // Create and start the node based on the CLI flags
+   prepare(ctx)//检查运行环境及机器配置等
+   stack, backend := makeFullNode(ctx)
+   startNode(ctx, stack, backend)
+   defer stack.Close()
+    
+    .....
+&#125;
+</code></pre>
+<p>两处地方都是先执行makeFullNode方法，再执行startNode方法。</p>
+<h3 id="1，makeFullNode"><a href="#1，makeFullNode" class="headerlink" title="1，makeFullNode"></a>1，makeFullNode</h3><pre><code class="golang">func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) &#123;
+   stack, cfg := makeConfigNode(ctx)//配置节点，配置级别：启动参数&gt;配置文件&gt;默认配置
+
+   backend := utils.RegisterEthService(stack, &amp;cfg.Eth)//注册ethService
+ 
+ ...
+&#125;
+</code></pre>
+<p>重点关注一下RegisterEthService方法中的New方法，位于eth/backend.go：</p>
+<pre><code>func RegisterEthService(stack *node.Node, cfg *eth.Config) ethapi.Backend &#123;
+   ...
+   backend, err := eth.New(stack, cfg)
+   ...
+   return backend.APIBackend
+&#125;
+</code></pre>
+<pre><code class="golang">func New(stack *node.Node, config *Config) (*Ethereum, error) &#123;
+
+   // 设置轻节点及同步模式
+   // 设置gasPrice
+   // 设置快照缓存
+   // 设置创世块SetupGenesisBlock
+   // 初始化Ethereum对象等等
+
+   ...
+   
+   // 创建矿工，创建完成后等待启动停止信号
+   eth.miner = miner.New(eth, &amp;config.Miner, chainConfig, eth.EventMux(), eth.engine, eth.isLocalBlock)
+   eth.miner.SetExtra(makeExtraData(config.Miner.ExtraData))
+
+   ...
+&#125;
+</code></pre>
+<p>进入miner.New方法</p>
+<pre><code class="golang">func New(eth Backend, config *Config, chainConfig *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine, isLocalBlock func(block *types.Block) bool) *Miner &#123;
+   miner := &amp;Miner&#123;
+      eth:     eth,
+      mux:     mux,
+      engine:  engine,
+      exitCh:  make(chan struct&#123;&#125;),
+      startCh: make(chan common.Address),
+      stopCh:  make(chan struct&#123;&#125;),
+      worker:  newWorker(config, chainConfig, engine, eth, mux, isLocalBlock, true),
+   &#125;
+   go miner.update()
+
+   return miner
+&#125;
+</code></pre>
+<h4 id="1-1-newWorker"><a href="#1-1-newWorker" class="headerlink" title="1.1 newWorker"></a>1.1 newWorker</h4><p>位于miner/worker.go</p>
+<pre><code class="golang">func newWorker(config *Config, chainConfig *params.ChainConfig, engine consensus.Engine, eth Backend, mux *event.TypeMux, isLocalBlock func(*types.Block) bool, init bool) *worker &#123;
+    //初始化worker对象
+   worker := &amp;worker&#123;
+      config:             config,
+      chainConfig:        chainConfig,
+      engine:             engine,
+      eth:                eth,
+      mux:                mux,
+      chain:              eth.BlockChain(),
+      isLocalBlock:       isLocalBlock,
+      localUncles:        make(map[common.Hash]*types.Block),
+      remoteUncles:       make(map[common.Hash]*types.Block),
+      unconfirmed:        newUnconfirmedBlocks(eth.BlockChain(), miningLogAtDepth),
+      pendingTasks:       make(map[common.Hash]*task),
+      txsCh:              make(chan core.NewTxsEvent, txChanSize),
+      chainHeadCh:        make(chan core.ChainHeadEvent, chainHeadChanSize),
+      chainSideCh:        make(chan core.ChainSideEvent, chainSideChanSize),
+      newWorkCh:          make(chan *newWorkReq),
+      taskCh:             make(chan *task),
+      resultCh:           make(chan *types.Block, resultQueueSize),
+      exitCh:             make(chan struct&#123;&#125;),
+      startCh:            make(chan struct&#123;&#125;, 1),
+      resubmitIntervalCh: make(chan time.Duration),
+      resubmitAdjustCh:   make(chan *intervalAdjust, resubmitAdjustChanSize),
+   &#125;
+   ...
+   //重点关注这几个loop
+   go worker.mainLoop()
+   go worker.newWorkLoop(recommit)
+   go worker.resultLoop()
+   go worker.taskLoop()
+
+   // 提交一个初始化的pending状态
+   if init &#123;
+      worker.startCh &lt;- struct&#123;&#125;&#123;&#125;
+   &#125;
+   return worker
+&#125;
+</code></pre>
+<p>四个loop都是开启无限循环等待指示，接收到不同channel发送过来的命令会执行不同的操作</p>
+<p>这些channel都定义在miner/worker.go中的<code>type worker struct &#123;&#125;</code>中</p>
+<h5 id="1-1-1-mainLoop-监听的channel"><a href="#1-1-1-mainLoop-监听的channel" class="headerlink" title="1.1.1 mainLoop()监听的channel"></a>1.1.1 mainLoop()监听的channel</h5><pre><code class="golang">newWorkCh
+chainSideCh
+txsCh
+exitCh
+txsSub.Err()
+chainHeadSub.Err()
+chainSideSub.Err()
+</code></pre>
+<ul>
+<li><h6 id="newWorkCh"><a href="#newWorkCh" class="headerlink" title="newWorkCh"></a>newWorkCh</h6></li>
+</ul>
+<pre><code class="golang">case req := &lt;-w.newWorkCh:
+   w.commitNewWork(req.interrupt, req.noempty, req.timestamp)
+</code></pre>
+<p>执行commitNewWork方法</p>
+<pre><code class="golang">func (w *worker) commitNewWork(interrupt *int32, noempty bool, timestamp int64) &#123;
+  ...
+  //检查系统时间和当前区块时间差异
+  //新建一个区块头，填入父区块号，区块高度，gasLimit，时间戳等
+  //检查coinbase是否存在
+  
+  //Prepare方法是consenus包下面定义的Engine的接口，由consenus/ethash和clique包分别实现其所有方法，包含Prepare方法
+  //ethash实现的是pos算法，clique实现的是poa算法，poa算法主要运行在测试网上，之所以不在测试网也使用pos是因为测试网算力不足，pos会遭到攻击
+  //本文主要分析ethash算法的挖矿过程，除了特别说明，下文所有介绍的Engine接口的实现算法都是ethash算法
+  //Prepare方法是计算当前区块所需要的难度值，即header.Difficulty，方便后续计算hash的时候做比较(pos算法精髓)
+      if err := w.engine.Prepare(w.chain, header); err != nil &#123;
+        log.Error(&quot;Failed to prepare header for mining&quot;, &quot;err&quot;, err)
+        return
+    &#125;
+   //检查是否有DAO硬分叉
+   //组装叔块，叔块不能距离当前块的高度超过7
+   //组装交易池中的交易
+   
+   //组装成区块并提交新交易
+   w.commit(uncles, w.fullTaskHook, true, tstart)
+&#125;
+</code></pre>
+<p>commit方法</p>
+<pre><code>func (w *worker) commit(uncles []*types.Header, interval func(), update bool, start time.Time) error &#123;
+   ...
+   //FinalizeAndAssemble也是ethash包中的方法，根据传入参数组装成区块
+   block, err := w.engine.FinalizeAndAssemble(w.chain, w.current.header, s, w.current.txs, uncles, receipts)
+   ...
+      //将组装好的区块和数据发送给taskCh这个channel，该channel是在taskLoop中监听的channel，详见下文
+      case w.taskCh &lt;- &amp;task&#123;receipts: receipts, state: s, block: block, createdAt: time.Now()&#125;:
+         w.unconfirmed.Shift(block.NumberU64() - 1)
+         log.Info(&quot;Commit new mining work&quot;, &quot;number&quot;, block.Number(), &quot;sealhash&quot;, w.engine.SealHash(block.Header()),
+            &quot;uncles&quot;, len(uncles), &quot;txs&quot;, w.current.tcount,
+            &quot;gas&quot;, block.GasUsed(), &quot;fees&quot;, totalFees(block, receipts),
+            &quot;elapsed&quot;, common.PrettyDuration(time.Since(start)))
+    ...
+&#125;
+</code></pre>
+<ul>
+<li><h6 id="chainSideCh"><a href="#chainSideCh" class="headerlink" title="chainSideCh"></a>chainSideCh</h6><p>这个channel仅是用于测试环境，不再分析</p>
+</li>
+<li><h6 id="txsCh"><a href="#txsCh" class="headerlink" title="txsCh"></a>txsCh</h6><p>接收交易的channel，接收到交易后，如果共识引擎没有工作，就把交易提交到交易池中。如果共识引擎没在工作，但当前是dev环境或者poa共识，那么也会调用commitNewWork方法参与出块</p>
+</li>
+<li><h6 id="exitCh"><a href="#exitCh" class="headerlink" title="exitCh"></a>exitCh</h6><p>接收到退出信号，停止mainLoop循环</p>
+</li>
+<li><h6 id="txsSub-Err"><a href="#txsSub-Err" class="headerlink" title="txsSub.Err()"></a>txsSub.Err()</h6><p>订阅交易错误，停止mainLoop循环</p>
+</li>
+<li><h6 id="chainHeadSub-Err"><a href="#chainHeadSub-Err" class="headerlink" title="chainHeadSub.Err()"></a>chainHeadSub.Err()</h6><p>订阅区块头错误，停止mainLoop循环</p>
+</li>
+<li><h6 id="chainSideSub-Err"><a href="#chainSideSub-Err" class="headerlink" title="chainSideSub.Err()"></a>chainSideSub.Err()</h6><p>订阅ChainSide错误，停止mainLoop循环</p>
+</li>
+</ul>
+<h5 id="1-1-2-newWorkLoop-监听的channel"><a href="#1-1-2-newWorkLoop-监听的channel" class="headerlink" title="1.1.2 newWorkLoop()监听的channel"></a>1.1.2 newWorkLoop()监听的channel</h5><pre><code class="golang">startCh
+chainHeadCh
+timer.C
+resubmitIntervalCh
+resubmitAdjustCh
+exitCh
+</code></pre>
+<p>先看看commit和clearPending两个方法：</p>
+<pre><code class="golang">//中止正在执行的事务，然后重新提交一个新的任务，向newWorkCh通道发消息，mainLoop接收到消息开始工作
+commit := func(noempty bool, s int32) &#123;
+   if interrupt != nil &#123;
+      atomic.StoreInt32(interrupt, s)
+   &#125;
+   interrupt = new(int32)//0
+   w.newWorkCh &lt;- &amp;newWorkReq&#123;interrupt: interrupt, noempty: noempty, timestamp: timestamp&#125;
+   timer.Reset(recommit)
+   atomic.StoreInt32(&amp;w.newTxs, 0)
+&#125;
+// 清除旧的pending状态的任务，pendingTask是做什么用的会在taskLoop中说到
+clearPending := func(number uint64) &#123;
+   w.pendingMu.Lock()
+   for h, t := range w.pendingTasks &#123;
+      if t.block.NumberU64()+staleThreshold &lt;= number &#123;
+         delete(w.pendingTasks, h)
+      &#125;
+   &#125;
+   w.pendingMu.Unlock()
+&#125;
+</code></pre>
+<ul>
+<li><h6 id="startCh-amp-chainHeadCh"><a href="#startCh-amp-chainHeadCh" class="headerlink" title="startCh &amp; chainHeadCh"></a>startCh &amp; chainHeadCh</h6><p>都是先执行<code>clearPending</code>再执行<code>commit</code>，向mainLoop传递newWork消息</p>
+</li>
+<li><h6 id="timer-C"><a href="#timer-C" class="headerlink" title="timer.C"></a>timer.C</h6><p>每隔一段时间T（不能低于1秒），检查是否有新交易，如果有新交易，就把新交易也重新统计，方便找到更高手续费的交易，调用commit方法。如果没有新交易，则继续循环</p>
+</li>
+<li><h6 id="resubmitIntervalCh"><a href="#resubmitIntervalCh" class="headerlink" title="resubmitIntervalCh"></a>resubmitIntervalCh</h6><p>用于设置T的大小，即间隔多久会检查新交易，最小不能低于1秒，是通过api中的miner.SetRecommitInterval调用的</p>
+</li>
+<li><h6 id="resubmitAdjustCh"><a href="#resubmitAdjustCh" class="headerlink" title="resubmitAdjustCh"></a>resubmitAdjustCh</h6><p>用于增加或者减少矿工重新提交的时间间隔</p>
+</li>
+<li><h6 id="exitCh-1"><a href="#exitCh-1" class="headerlink" title="exitCh"></a>exitCh</h6><p>退出Loop</p>
+</li>
+</ul>
+<h5 id="1-1-3-resultLoop-监听的channel"><a href="#1-1-3-resultLoop-监听的channel" class="headerlink" title="1.1.3 resultLoop()监听的channel"></a>1.1.3 resultLoop()监听的channel</h5><pre><code class="golang">resultCh
+exitCh
+</code></pre>
+<ul>
+<li><h6 id="resultCh"><a href="#resultCh" class="headerlink" title="resultCh"></a>resultCh</h6><pre><code class="golang">case block := &lt;-w.resultCh:
+   // Short circuit when receiving empty result.
+   if block == nil &#123;
+      continue
+   &#125;
+   // Short circuit when receiving duplicate result caused by resubmitting.
+   if w.chain.HasBlock(block.Hash(), block.NumberU64()) &#123;
+      continue
+   &#125;
+   var (
+      sealhash = w.engine.SealHash(block.Header())
+      hash     = block.Hash()
+   )
+   w.pendingMu.RLock()
+   task, exist := w.pendingTasks[sealhash]
+   w.pendingMu.RUnlock()
+   if !exist &#123;
+      log.Error(&quot;Block found but no relative pending task&quot;, &quot;number&quot;, block.Number(), &quot;sealhash&quot;, sealhash, &quot;hash&quot;, hash)
+      continue
+   &#125;
+   // Different block could share same sealhash, deep copy here to prevent write-write conflict.
+   var (
+      receipts = make([]*types.Receipt, len(task.receipts))
+      logs     []*types.Log
+   )
+   for i, receipt := range task.receipts &#123;
+      // add block location fields
+      receipt.BlockHash = hash
+      receipt.BlockNumber = block.Number()
+      receipt.TransactionIndex = uint(i)
+
+      receipts[i] = new(types.Receipt)
+      *receipts[i] = *receipt
+      // Update the block hash in all logs since it is now available and not when the
+      // receipt/log of individual transactions were created.
+      for _, log := range receipt.Logs &#123;
+         log.BlockHash = hash
+      &#125;
+      logs = append(logs, receipt.Logs...)
+   &#125;
+   // Commit block and state to database.
+   _, err := w.chain.WriteBlockWithState(block, receipts, logs, task.state, true)
+   if err != nil &#123;
+      log.Error(&quot;Failed writing block to chain&quot;, &quot;err&quot;, err)
+      continue
+   &#125;
+   log.Info(&quot;Successfully sealed new block&quot;, &quot;number&quot;, block.Number(), &quot;sealhash&quot;, sealhash, &quot;hash&quot;, hash,
+      &quot;elapsed&quot;, common.PrettyDuration(time.Since(task.createdAt)))
+
+   // Broadcast the block and announce chain insertion event
+   w.mux.Post(core.NewMinedBlockEvent&#123;Block: block&#125;)
+
+   // Insert the block into the set of pending ones to resultLoop for confirmations
+   w.unconfirmed.Insert(block.NumberU64(), block.Hash())
+</code></pre>
+<p>主要做了4件事：</p>
+<p>1，校验收到区块的hash是否在pendingTask内</p>
+<p>2，尝试写入本地账本、更改世界状态</p>
+<p>3，广播出去</p>
+<p>4，把该块加入待确认的块中，等待确认</p>
+</li>
+<li><h6 id="exitCh-2"><a href="#exitCh-2" class="headerlink" title="exitCh"></a>exitCh</h6><p>退出Loop</p>
+</li>
+</ul>
+<h5 id="1-1-4-taskLoop-监听的channel"><a href="#1-1-4-taskLoop-监听的channel" class="headerlink" title="1.1.4 taskLoop()监听的channel"></a>1.1.4 taskLoop()监听的channel</h5><pre><code class="golang">taskCh
+exitCh
+</code></pre>
+<ul>
+<li><h6 id="taskCh"><a href="#taskCh" class="headerlink" title="taskCh"></a>taskCh</h6><p>taskCh接收到的消息，即为后续需要执行的task</p>
+<pre><code>case task := &lt;-w.taskCh:
+   if w.newTaskHook != nil &#123;
+      w.newTaskHook(task)
+   &#125;
+   // 先调用SealHash方法，返回一个区块hash
+   sealHash := w.engine.SealHash(task.block.Header())
+   if sealHash == prev &#123;
+      continue
+   &#125;
+   // Interrupt previous sealing operation
+   interrupt()
+   stopCh, prev = make(chan struct&#123;&#125;), sealHash
+
+   if w.skipSealHook != nil &amp;&amp; w.skipSealHook(task) &#123;
+      continue
+   &#125;
+   w.pendingMu.Lock()
+   
+   //把该task加入pendingTasks，前文提到过，pending太久的任务会被删除
+   w.pendingTasks[sealHash] = task
+   w.pendingMu.Unlock()
+   
+   //调用Seal方法开始挖矿，使用不同的nonce去计算，直到找到难度满足的nonce，找到区块后，发送到resultCh这个channel中，resultCh接收到的消息是在上文
+   //介绍的resultLoop中进行处理的
+   if err := w.engine.Seal(w.chain, task.block, w.resultCh, stopCh); err != nil &#123;
+      log.Warn(&quot;Block sealing failed&quot;, &quot;err&quot;, err)
+   &#125;
+</code></pre>
+</li>
+<li><h6 id="exitCh-3"><a href="#exitCh-3" class="headerlink" title="exitCh"></a>exitCh</h6></li>
+</ul>
+<p>退出Loop</p>
+<p>整理如下图：</p>
+<p><img src="data:image/jpg;base64,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FeBBOBBOBBOBBOBBOBBXgQTgQTgQTgQTgQTgQV4EE4EE4EE4EE4EE4EFeBBOBBOBBOBBOBBOBBXgQTgQTgQTgQTgQTgQV4EE4EE4EE4EE4EE4EFeBBOBBOBBOBBOBBOBBXgQTgQTgQTgQTgQTgQV4EE4EE4EE4EE4EE4EFeBBOBBOBBNPxxxkmcajWPa9r2vbHjZZeHpUxkiy1j2va9r2va9r2va9r10/pD/AAva9r2vbHh4RoOkQNmTse17Xte17Xte17Xteun9If4GcajONRnGozjfC41GcajONRnGozjUZxqM/wAbjUZxjT+kzjUax7Xte1/je17Xte17Xtf43teun9Ie5RRRfKiiiii+VFFFFF8qKKKKL5UX4VF8qKKKKL5UUUUUXyooooovlRRRRRfKiiiii+VFFFFH+NfKiiiii+VFFNPx9kovlRRRRRatDm48XLvTRvTRvTRvTRvTRvTS700b00b00b00b00b00u9NG9NG9NG9NG9NG9NLvTRvTRDzZs2SJn24eMWLgcrMciIcjHPlgZomfKTk5PQiQm5uLB3po3po3po3po3po3ppd6aN6aN6aN6aN6aN6aXemjemjemjemjemjeml3po3po3po3po3po3ppd6aN6aN6aN6aN6aN6aXemjemjemjemjemjLFmMc5jEzbuSaxwOZj6sdzNM4TmOJv5zJHxy5N/OQs+5DiY5suSc1CfyYwJmcxl8k3G5FGcY0/pM41Gs07pWva9r1/k48H0enKenKvoymGTLlxoiY2va9r2va9rmMPJmzYwYeOOEGFhimC7MJc0PJnw28iRoGWNkyZMIeQxwUwwTCY/YVeun9If4dO6Vr2va/xva9r2va9r2v8bkx+wq9dP6Q/wNp3SGozjUZxqM43wuNRnGozjUZxqM41GcajP8bkx+wozjGn9JnGo1mndK17Xte17Xte17Xte17Xte1yY/YVeun9Ie5RRTTukooooovlRRRRRfKiiiii+VFFFFF8qKKKKL5UUUUUXyooooovlRRRRRfKiiiii+VFFFFF8qKKKKL5UUUUUXyooooovlSY/YKKKL5UUU0/H2Si+VFFFFFq2ndIajONRnGozjUZxqM41GcajONRnGozjUZxqM41GcajOTH7CjOMaf0mcajWad0rXte17Xte17Xte17Xte17XJj9hV66f0h/h07pWva9r2va9r2vSLhmiz+aWy5Tag4ZOPDWImQhYZYhtQfTkyZcxDh5c0rjBhZcmaDCynDOGcM4ZNwM0CVte17XJj9hV66f0h/gbTukNHj5YGXmHMOZ55hzDmHMOYczzzDmHMOYcw5nmDFyx4TUZxqM41GcajON9rHgYR8uOnYenNp+GOOMlhjm/H4bOTTcuXLkk9uP+OiYy+bTFg59L9ebDxhXUf141GcajONRnJj9hRnGNP6TONRrNO6VJ0iZvRC5s16c87jmjRM2GGWZ1PHKRNQi5ZvLPxc078GndKx7Xte16fa/NqP6+17XtcmP2FXrp/SHuUUU07pKKTt+SHlh/Dp+PslFFFF8qKKKKL5UUUUUXyooooovlRT7X5tR/XqKKKKL5UUUUUXyooooovlSY/YKKKL5UUU0/H2Si+VFFFFFq2ndIad/wad0mozjUZxqM41Gcb7W3HHDCi4LhMQ812o/rxqM41GcajOTH7CjOMaf0mcajWad0qTv+DTulY9r2va9Ptbc8GJnMckxyM0tj6825FgwcmOSsSV3InCJ6V9ElwjhHCOEcI4XnhHCOEcI4RwvPCOEcI4RwjheeEZoG1P1eun9If4dO6VJ3/Bp3Sse17Xten2vzaj+vte17XI/dq9dP6Q/wNp3SGnf8GndJqM41GcajONRnG+1+bUf141GcajONRnI/dozjGn9JnGo1mndKk7/AINO6Vj2va9r0+1+bUf19r2va5H7tXrp/SHuUUU07pKKTv8Ag0/H2Siiii+VFFFFF8qKKKKL5UUUUUXyop9r82o/r1FFFFF8qKKKKL5UUUUUXypH7qiii+VFFNPx9kovlRRRRRatp3SGnf8ABp3SajONRnGozjUZxvtfm1H9eNRnGozjUZyP3aM4xp/SZxqNZp3SpO/4NO6Vj2va9r0+1rjjhhRcFXBcMcMaLguSNCiWaj+vte17XI/dq9dP6Q/w6d0qTtFW3HNlwFwU9WHpyRYcS3TulY9r2va9Pta59zORc0fJD9UxmMMkXPEzYzEKHjEmOThlz5zPjjGwg+rbNmaJ6FMYSWzNGzNGzNG1NG1Nm1NrtTZtTZtTZtTZtTZtTa7c4bc4bc4bc4bc4bc4vonTLLx8Y9Xrp/SH+BoctNQcu3Om3Ok1kmjbnSHp8/yIGSJkhxsc2EGLmmIeXHPMYYY5ImOOXcyw8m7mxyYRNnOsYherGFFibWXmHMJKa9EpzDmHNOac3zzTmmafwyYfzgzjUZxqM432vzaj+vGozjUZxqM41GcY0/pM41Gsek7/AINO6Vj01DoZf6D2va9Ptfm1H9fa9r2va9dP6Q9yiii+VFJ3/Bp+PslFFFF8qKahj7DLj/4UXyooooovlRRRRRfKin2vzaj+vUUUUUXyooooovlRRRRRfKiiiii+VFFNPx9kovlRRRRRas407/g07pNRnG1DoZf6M41GcajON9r82o/rxqM41GcajONRnGNP6TONRrHpO/4NO6Vj01DoZf6D2va9Ptfm1H9fa9r2va9dP6Q/wvSd/wAGndKx6ah0Mv8AQe17Xp9r82o/r7Xte17Xrp/SH+BnGnf8GndJqM42odDL/RnGozjUZxvtbcc2GFmSNkiY2aj+vGozjUZxqM41GcY0/pM41Gsek7/g07pWPTUOhl/oPa9r0+1tiQs/I2M+Of0TXrwhZtqHmz41iQImfPxopPQImWS40U40U40U40Y40Y40ZeNGONGONGONGONGONGXjRjjRzjRzjRzjRzjR140c40c40c40c40c40deNMHGmDjTBLwdiCPcooovlRSd/wafj7JRRRRfKimoY+wy4/+FF8qKKKKL5UUUUUXyop9r82o/r1FFFFF8qKKKKL5UUUUUXyooooovlRRRRRfKiiiii1Zxp3/AAad0mozjah0Mv8ARnGozjUZxvtfm1H9eNRnGozjUZxqM41GcajWPSd/wad0rHpqHQy/0Hte16fa/NqP6+17Xte17X+F6Tv+DTulY9Na3MJbTtzGSHte16fa/NqP6+17Xte17X+BnGnf8GndKx6TMHCYl8uXDJlHtcajON9r82o/rxqM41GcajONRnGozjUax6TmSJmy8iaORNHImTkTRyJo5E0ciaORNHImTkTRyJo5E0ciaORNHImSSh54Up/ge16Rc2aFqHMOYcw5hzDmHMOYcw5hzDmHMOYTcfNHlbXte17Xte5RRRfKiiiii+VFFFFF8qKKKKL5WseLjDzZY+bGPyI+3mixtyLFz4wcfGbk58kXkRPUvoxxiZoGWLEiY5YOfch0XyooooovlRRRRRfKiiiii+VFFFFF8qKKKKL5UUUUUXyooooovlRRRRRfKiiiii+VFFFFFqzjUZxqM41Gf/C41GcajONRnGozjUZxqM41GcajONRn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M9F/JNOJONIPOKNOJONIONNLOHNPPPPPPPNLOHDOHLOHLOHNPPPPPPKHLOHLOHLOHLOHLOHLLFAKFPPPPPPPKFAKBAKFAKFAKPPPPPPPKKFAKFAKFAKFAKFAKFFNIOFOPPOPPODHHLLHLHAONIOFMONMONJONIONIONIONIONIONNLOHLOHLOHLOHPDffPLHGHLOHLOHLOHLOHLOHLOHLOHLOHLOHLLFAKFAKFAKFAKFAKPAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFFNIONIONIONIONIOHIONIONIONIONIONIONIONIONIONIONIONNLOHLOHLOHLOHLOHBOGJMGLOHLOHLOHLOHLOHLOHLOHLOHLOHLLFAKFAKFAKFAKFAKNCONPNEAKFAKFAKFAKFAKFAKFAKFAKFAKFFNIONIPNIONJONIONIONNONIONIONIONJONIONIONIONIONIONNLOHODbLV/PLHLOHLOHLOHLOHOPbXPPPKHLOHLOHLOHLDLGOFLLFAKFPPPPPPPKECJGCJFAKFAKFPPPPPPKKHCLGALHCKNHHLMCFFNIOJPPPPPPPOJPPONKNIONIOJPPPPPPKPPPPOIPPPOMNPOLGNNLMHPMPOvvPLHPPPFt6LOHLOHNOPPNOMICCrjMNEOMmLPHLGPLLFAKFPPPPPPPKFPPL/6FAKFAKFPPPPPPKPPPPKAPPPKCNNKBAFFNMOJPPPPPPPONAKFAKNIONIOJPPPPPPKONNONIONNONPPPIGNNLHHOPPPPPPLHLOHLOHLOHLOHOPPPPPPKHLOHLOHLOHDGLACPLLFAKFMONMONMKFAKFAKFAKFAKEONOONOLKFAKFAKFAKFNOICKFFNMONIONIONIONIONIONIONIONIONIONIONIONIONIONIONIONNLHHLOHLOHLOHLOHLOHLOHLOHLOHLOHLOHLOHLOHLOHLOHLOHLLFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFAKFFNMONIONIONIONIONIONJONJONIONIONIONIONIONIONIONIONNLGGINFKOFLOGJNGINFKFPsPPLNGJNGJNGJNGJNGJNGJNGJNHLLFAKFAKFAKFAKFAKFAKFMONMKFAKFAKFAKFAKFAKFAKFAKFAKFFNIONIONIONIONIONIONIONIONIO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"></p>
+<h4 id="1-2-miner-update"><a href="#1-2-miner-update" class="headerlink" title="1.2 miner.update()"></a>1.2 miner.update()</h4><p>这个方法比较好理解</p>
+<pre><code class="golang">func (miner *Miner) update() &#123;
+   //订阅downloader相关频道
+   events := miner.mux.Subscribe(downloader.StartEvent&#123;&#125;, downloader.DoneEvent&#123;&#125;, downloader.FailedEvent&#123;&#125;)
+   defer func() &#123;
+      if !events.Closed() &#123;
+         events.Unsubscribe()
+      &#125;
+   &#125;()
+
+   shouldStart := false
+   canStart := true
+   dlEventCh := events.Chan()
+   for &#123;
+      select &#123;
+      //接收到downloader频道的消息
+      case ev := &lt;-dlEventCh:
+         if ev == nil &#123;
+            // Unsubscription done, stop listening
+            dlEventCh = nil
+            continue
+         &#125;
+         switch ev.Data.(type) &#123;
+         //如果是开始下载的信号，就先同步再挖矿
+         case downloader.StartEvent:
+            wasMining := miner.Mining()
+            miner.worker.stop()
+            canStart = false
+            if wasMining &#123;
+               // Resume mining after sync was finished
+               shouldStart = true
+               log.Info(&quot;Mining aborted due to sync&quot;)
+            &#125;
+         //如果是下载失败的信号，就直接开始挖矿
+         case downloader.FailedEvent:
+            canStart = true
+            if shouldStart &#123;
+               miner.SetEtherbase(miner.coinbase)
+               miner.worker.start()
+            &#125;
+         //如果是下载完成的信号，也直接开始挖矿
+         case downloader.DoneEvent:
+            canStart = true
+            if shouldStart &#123;
+               miner.SetEtherbase(miner.coinbase)
+               miner.worker.start()
+            &#125;
+            // Stop reacting to downloader events
+            events.Unsubscribe()
+         &#125;
+      //如果是miner.startCh传来了信号，则是开始挖矿的信号，检查条件满足后，调用miner.worker.start()方法
+      case addr := &lt;-miner.startCh:
+         miner.SetEtherbase(addr)
+         if canStart &#123;
+            miner.worker.start()
+         &#125;
+         shouldStart = true
+      case &lt;-miner.stopCh:
+         shouldStart = false
+         miner.worker.stop()
+      case &lt;-miner.exitCh:
+         miner.worker.close()
+         return
+      &#125;
+   &#125;
+&#125;
+</code></pre>
+<p>miner.worker.start()方法向newWorkLoop中的startCh传递了消息，矿工开始工作</p>
+<pre><code>func (w *worker) start() &#123;
+   atomic.StoreInt32(&amp;w.running, 1)
+   w.startCh &lt;- struct&#123;&#125;&#123;&#125;
+&#125;
+</code></pre>
+<h3 id="2-startNode"><a href="#2-startNode" class="headerlink" title="2,startNode"></a>2,startNode</h3><pre><code class="golang">func startNode(ctx *cli.Context, stack *node.Node, backend ethapi.Backend) &#123;
+   ...
+   utils.StartNode(stack) 
+   ...
+   //账户相关操作
+&#125;   
+</code></pre>
+<pre><code class="golang">func StartNode(stack *node.Node) &#123;
+   ...
+   //如果启动参数上面带有--mine或者是--dev（开发测试模式）的话
+   if ctx.GlobalBool(utils.MiningEnabledFlag.Name) || ctx.GlobalBool(utils.DeveloperFlag.Name) &#123;
+       //
+       ...
+       //调用eth/api_backend.go中的startMining方法
+       if err := ethBackend.StartMining(threads); err != nil &#123;
+            utils.Fatalf(&quot;Failed to start mining: %v&quot;, err)
+        &#125;
+   &#125;
+&#125;   
+</code></pre>
+<p>StartMining则会调用eth/backend.go中的StartMining方法</p>
+<pre><code class="golang">func (b *EthAPIBackend) StartMining(threads int) error &#123;
+   return b.eth.StartMining(threads)
+&#125;
+</code></pre>
+<p>同样的，在控制台内调用miner.start()方法的时候，也会调用该方法</p>
+<pre><code>func (api *PrivateMinerAPI) Start(threads *int) error &#123;
+   if threads == nil &#123;
+      return api.e.StartMining(runtime.NumCPU())
+   &#125;
+   return api.e.StartMining(*threads)
+&#125;
+</code></pre>
+<p>下面看看StartMining方法：</p>
+<pre><code class="golang">func (s *Ethereum) StartMining(threads int) error &#123;
+  //设置挖矿线程数量
+  //设置gasPrice
+  //设置etherbase
+  //检查是否是poa
+  //最后开启新的协程去挖矿
+      go s.miner.Start(eb)
+   &#125;
+   return nil
+&#125;
+</code></pre>
+<p>最后start方法很简单，就是把coinbase传递到startCh这个channel中去，还记得这个channel吗？在newWorkLoop中</p>
+<pre><code class="golang">func (miner *Miner) Start(coinbase common.Address) &#123;
+   miner.startCh &lt;- coinbase
+&#125;
+</code></pre>
+<p>至此以太坊挖矿启动的过程就分析完了，还有一个疑问，在启动了四个loop之后，为什么要调用下面的代码发送消息</p>
+<pre><code>if init &#123;
+      worker.startCh &lt;- struct&#123;&#125;&#123;&#125;
+   &#125;
+</code></pre>
+<p>debug之后发现，这其实是为了提交一个初始化的pending状态，并且在后续的代码中还会检查work对象中running字段的状态及coinbase是否设置，如果没有设置，是不会启动挖矿的</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2017 caohuan
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
