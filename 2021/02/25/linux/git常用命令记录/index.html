@@ -70,7 +70,7 @@
 
 
 <ul>
-    <li><div class="all active" data-rel="全部文章">全部文章<small>(57)</small></div></li>
+    <li><div class="all active" data-rel="全部文章">全部文章<small>(61)</small></div></li>
     
         
             
@@ -114,7 +114,7 @@
     
         
             
-            <li><div data-rel="golang">golang<small>(9)</small></div>
+            <li><div data-rel="golang">golang<small>(12)</small></div>
                 
             </li>
             
@@ -130,7 +130,7 @@
     
         
             
-            <li><div data-rel="linux">linux<small>(6)</small></div>
+            <li><div data-rel="linux">linux<small>(7)</small></div>
                 
             </li>
             
@@ -154,8 +154,8 @@
     </div>
     <div></div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="57">
-<input type="hidden" id="yelog_site_word_count" value="72.6k">
+<input type="hidden" id="yelog_site_posts_number" value="61">
+<input type="hidden" id="yelog_site_word_count" value="73.8k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -349,6 +349,38 @@
            data-author="" >
             <span class="post-title" title="git常用命令记录">git常用命令记录</span>
             <span class="post-date" title="2021-02-25 19:14:01">2021/02/25</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/12/20/golang/gin%E5%85%A5%E9%97%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gin入门">gin入门</span>
+            <span class="post-date" title="2020-12-20 22:36:19">2020/12/20</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/11/13/golang/go%20build%E7%9A%84ldflag%E5%8F%82%E6%95%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="go build的ldflage参数">go build的ldflage参数</span>
+            <span class="post-date" title="2020-11-13 18:12:13">2020/11/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/11/12/golang/%E4%BD%BF%E7%94%A8gdb%E8%B0%83%E8%AF%95golang%E7%A8%8B%E5%BA%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用gdb调试golang程序">使用gdb调试golang程序</span>
+            <span class="post-date" title="2020-11-12 20:58:36">2020/11/12</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/10/27/linux/make%E5%8F%8Amakefile/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="make及makefile">make及makefile</span>
+            <span class="post-date" title="2020-10-27 15:16:33">2020/10/27</span>
         </a>
         
         <a  class="全部文章 golang "
@@ -732,7 +764,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2021-03-10 14:31:34'>2021-02-25 19:14</time>
+            发布时间 : <time class="date" title='最后更新: 2021-11-13 15:06:15'>2021-02-25 19:14</time>
         
     </div>
     <div class="article-meta">
@@ -762,7 +794,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>git init    //产生一个.git的目录，用来记录当前目录所有git相关信息<br>git status     //查看git库当前的状态<br>git add //添加到暂存区<br>git commit -m “xxxxxxx” //提交到本地分支并添加提交说明<br>git log    //查看版本记录<br>git log –graph //查看分支合并图<br>git reflog    //查看命令历史<br>git reset –hard xxxxxx    //切换到某个版本，xxxxx表示版本号hash值<br>git reset HEAD aaa.txt //把add到暂存区的修改放回工作区<br>先有本地库，然后新建远程库，然后两个相关联：待补充</p>
-<p>git clone <a href="mailto:&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#x6d;</a>:chg90/gitStudy.git //先有远程库，在本地克隆<br>git branch test // 新建一个分支test<br>git branch //查看所有分支，带*号的是目前指向的分支<br>git branch -d test //删除test分支<br>git branch -D test //强行删除test分支(如果test分支没有被合并过)<br>git branch -vv 查看本地分支和远程分支关联关系</p>
+<p>git clone <a href="mailto:&#103;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#104;&#x75;&#98;&#x2e;&#99;&#111;&#x6d;">&#103;&#x69;&#116;&#x40;&#103;&#x69;&#x74;&#104;&#x75;&#98;&#x2e;&#99;&#111;&#x6d;</a>:chg90/gitStudy.git //先有远程库，在本地克隆<br>git branch test // 新建一个分支test<br>git branch //查看所有分支，带*号的是目前指向的分支<br>git branch -d test //删除test分支<br>git branch -D test //强行删除test分支(如果test分支没有被合并过)<br>git branch -vv 查看本地分支和远程分支关联关系</p>
 <p>git checkout – aaa.txt //1，如果工作区的修改没有add到暂存区，就把aaa.txt恢复到和版本库一样的状态  2，如果工作区的修改已经add到暂存区，就把aaa.txt恢复到最后一次提交到暂存区的状态<br>git checkout test //切换到test分支上<br>git checkout -b test // 新建分支test并切换到test分支上，相当于git branch test + git checkout test<br>git checkout -b 本地分支name 远程分支name // 本地新建分支，并关联到远程分支</p>
 <p>git diff abc.txt     //查看文件做了哪些改动<br>git diff xxxxx – aaa.txt //比较aaa.txt和xxxxx版本的区别<br>git diff  分支1 分支2 –stat （加上 –stat 是显示文件列表, 默认是文件内容diff）<br>git diff branch1 branch2 –stat                   //显示出所有有差异的文件列表<br>git diff branch1 branch2   具体文件路径   //显示指定文件的详细差异<br>git diff branch1 branch2                            //显示出所有有差异的文件的详细差异</p>
 <p>git merge test //把test分支的内容合并到当前所属分支上<br>git merge –no-ff -m “xxxxxx” test //把test分支合并到当前分支上，并且不使用fastforward模式，并提交一个新的commit</p>
@@ -772,10 +804,13 @@
 <p>git checkout -b test origin/test    //在新clone一个源的时候，只会下载下来master分支，如果想查看远程所有分支，使用git branch -a，如果想使用master之外的分支，则使用此命令以新建本地test分支并和远程test分支关联起来<br>git branch –set-upstream-to=origin/test test  //把本地的库test和源的origin/test关联起来，命令行中origin/test和test的位置对命令执行结果没有影响</p>
 <p>tag用于打标签，相当于打上版本号，并且随时可以调出该版本，类似于迅速定位某一个commit，但tag比较简单易读。标签也分为本地标签和远程标签，也都可以删除。<br>git tag //列出所有标签<br>git tag tagName //新建tag<br>git tag -a tagName -m “my tag”//创建tag和备注<br>git push origin tagName //推送tag到远程<br>git tag -d tagName //本地删除tag<br>git push origin :xxxx/tags/tagName //远程删除</p>
 <p>rebase命令可以对某一段线性提交历史进行编辑、删除、复制、粘贴</p>
-<p>fork：#从一个开源项目fork一份代码并贡献代码<br>1，页面上点击fork到自己的远程库<br>2，找到自己的远程仓库地址，clone到本地<br>    git clone –recurse-submodules <a href="mailto:&#x67;&#x69;&#116;&#x40;&#x67;&#x69;&#116;&#x2e;&#115;&#x65;&#x72;&#118;&#101;&#x72;&#46;&#103;&#105;&#x6e;&#103;&#x6b;&#x6f;&#x6f;">&#x67;&#x69;&#116;&#x40;&#x67;&#x69;&#116;&#x2e;&#115;&#x65;&#x72;&#118;&#101;&#x72;&#46;&#103;&#105;&#x6e;&#103;&#x6b;&#x6f;&#x6f;</a>:huan.cao/penta.git<br>3，更新自己的代码，与原项目保持一致<br>    git remote add upstream <a href="mailto:&#x67;&#x69;&#116;&#x40;&#103;&#105;&#116;&#x2e;&#115;&#x65;&#114;&#118;&#101;&#114;&#46;&#103;&#x69;&#110;&#x67;&#107;&#x6f;&#x6f;">&#x67;&#x69;&#116;&#x40;&#103;&#105;&#116;&#x2e;&#115;&#x65;&#114;&#118;&#101;&#114;&#46;&#103;&#x69;&#110;&#x67;&#107;&#x6f;&#x6f;</a>:pentagram/penta.git<br>4，从原项目取最新的代码合并到自己本低master分支<br>    git pull upstream<br>5，每次写代码之前，或者代码提交前，都应该从原项目取最新代码，防止冲突<br>    git pull upstream<br>6，自己写代码时，最好在分支上开发<br>    1，在gitlab页面上点击add branch，例如test<br>    2，本地git pull 取到最新branch<br>    3，git checkout  </p>
+<p>fork：#从一个开源项目fork一份代码并贡献代码<br>1，页面上点击fork到自己的远程库<br>2，找到自己的远程仓库地址，clone到本地<br>    git clone –recurse-submodules <a href="mailto:&#x67;&#x69;&#x74;&#64;&#103;&#105;&#x74;&#x2e;&#x73;&#x65;&#114;&#118;&#101;&#x72;&#x2e;&#103;&#x69;&#x6e;&#x67;&#x6b;&#111;&#x6f;">&#x67;&#x69;&#x74;&#64;&#103;&#105;&#x74;&#x2e;&#x73;&#x65;&#114;&#118;&#101;&#x72;&#x2e;&#103;&#x69;&#x6e;&#x67;&#x6b;&#111;&#x6f;</a>:huan.cao/penta.git<br>3，更新自己的代码，与原项目保持一致<br>    git remote add upstream <a href="mailto:&#103;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x2e;&#115;&#101;&#114;&#x76;&#101;&#114;&#x2e;&#x67;&#x69;&#110;&#x67;&#x6b;&#111;&#x6f;">&#103;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x2e;&#115;&#101;&#114;&#x76;&#101;&#114;&#x2e;&#x67;&#x69;&#110;&#x67;&#x6b;&#111;&#x6f;</a>:pentagram/penta.git<br>4，从原项目取最新的代码合并到自己本低master分支<br>    git pull upstream<br>5，每次写代码之前，或者代码提交前，都应该从原项目取最新代码，防止冲突<br>    git pull upstream<br>6，自己写代码时，最好在分支上开发<br>    1，在gitlab页面上点击add branch，例如test<br>    2，本地git pull 取到最新branch<br>    3，git checkout  </p>
 <p>从fork的分支更新代码<br>方式1,<br>git pull –ff-only upstream master &amp;&amp; git push<br>方式2，<br>git fetch upstream<br>git checkout master<br>git merge remotes/upstream/master<br>git push</p>
-<p>为不同的路径设置不同的git账号：到需要设置的路径下，<br>git config user.name “abc”<br>git config user.email “<a href="mailto:&#120;&#120;&#x40;&#x78;&#x78;&#46;&#99;&#x6f;&#x6d;">&#120;&#120;&#x40;&#x78;&#x78;&#46;&#99;&#x6f;&#x6d;</a>“<br>设置默认的总账号:<br>git config –global user.name “xxx”<br>git config –global user.email “xx@xx,com”</p>
+<p>为不同的路径设置不同的git账号：到需要设置的路径下，<br>git config user.name “abc”<br>git config user.email “<a href="mailto:&#x78;&#x78;&#x40;&#x78;&#x78;&#x2e;&#x63;&#111;&#109;">&#x78;&#x78;&#x40;&#x78;&#x78;&#x2e;&#x63;&#111;&#109;</a>“<br>设置默认的总账号:<br>git config –global user.name “xxx”<br>git config –global user.email “xx@xx,com”</p>
 <p>git pull时出现冲突 放弃本地修改，使远程库内容强制覆盖本地代码<br>git fetch –all　　 //只是下载代码到本地，不进行合并操作<br>git reset –hard origin/master 　　//把HEAD指向最新下载的版本</p>
+<p>//git 设置缩写命令</p>
+<p>git config –global alias.co checkout<br>git config –global alias.br branch<br>git config –global alias.ci commit<br>git config –global alias.st status </p>
+<p>git config –global https.proxy <a target="_blank" rel="noopener" href="https://127.0.0.1:19180/">https://127.0.0.1:19180</a> //设置代理<br>git config –global –unset https.proxy //取消代理</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源 </span>
