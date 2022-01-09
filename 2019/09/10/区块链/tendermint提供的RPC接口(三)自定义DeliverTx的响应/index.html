@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>tendermint提供的RPC接口(三)自定义DeliverTx的响应 | 曹欢的博客</title>
+  <meta name="keywords" content=" 区块链 ">
+  <meta name="description" content="tendermint提供的RPC接口(三)自定义DeliverTx的响应 | 曹欢的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="环境介绍1.Dockerfile中所用的所有文件一定要和Dockerfile文件在同一级父目录下，可以为Dockerfile父目录的子目录2.Dockerfile中相对路径默认都是Dockerfile所在的目录3.Dockerfile中一定要惜字如金，能写到一行的指令，一定要写到一行，原因是分层构建，联合挂载这个特性。Dockerfile中每一条指令被视为一层4.Dockerfile中指明大写（约">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dockerfile">
+<meta property="og:url" content="https://caohuan.tech/2021/12/26/linux/Dockerfile/index.html">
+<meta property="og:site_name" content="曹欢的博客">
+<meta property="og:description" content="环境介绍1.Dockerfile中所用的所有文件一定要和Dockerfile文件在同一级父目录下，可以为Dockerfile父目录的子目录2.Dockerfile中相对路径默认都是Dockerfile所在的目录3.Dockerfile中一定要惜字如金，能写到一行的指令，一定要写到一行，原因是分层构建，联合挂载这个特性。Dockerfile中每一条指令被视为一层4.Dockerfile中指明大写（约">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-26T05:46:26.000Z">
+<meta property="article:modified_time" content="2021-12-26T14:19:28.264Z">
+<meta property="article:author" content="caohuan">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="false" />
+</div>
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.jpg" />
+</a>
+<div class="author">
+    <span>caohuan</span>
+</div>
+
+<div class="icon">
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active" data-rel="全部文章">全部文章<small>(68)</small></div></li>
+    
+        
+            
+            <li><div data-rel="以太坊">以太坊<small>(9)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="defi">defi<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="fabric">fabric<small>(14)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="区块链">区块链<small>(13)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="golang">golang<small>(12)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="java">java<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="linux">linux<small>(11)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="数据库">数据库<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="68">
+<input type="hidden" id="yelog_site_word_count" value="125.6k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" />
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>零知识证明</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>路印协议</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>区块链</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>以太坊</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>beego</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>defi</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>fabric</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>java</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="全部文章 linux "
+           href="/2021/12/26/linux/Dockerfile/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Dockerfile">Dockerfile</span>
+            <span class="post-date" title="2021-12-26 13:46:26">2021/12/26</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/12/25/linux/docker%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="docker命令">docker命令</span>
+            <span class="post-date" title="2021-12-25 19:34:51">2021/12/25</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2021/12/12/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE1-%E5%8D%95%E9%93%BE%E8%B0%83%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议1-单链调用">陆羽协议1-单链调用</span>
+            <span class="post-date" title="2021-12-12 17:43:01">2021/12/12</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2021/12/12/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议">陆羽协议</span>
+            <span class="post-date" title="2021-12-12 16:27:17">2021/12/12</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/12/12/linux/%E5%90%84%E7%A7%8D%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%90%84%E7%A7%8D%E5%8C%85%E7%9A%84%E5%AE%89%E8%A3%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="各种环境下各种包的安装">各种环境下各种包的安装</span>
+            <span class="post-date" title="2021-12-12 15:19:19">2021/12/12</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/11/14/k8s/Kubernetes%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="k8s">k8s</span>
+            <span class="post-date" title="2021-11-14 12:54:20">2021/11/14</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/10/28/linux/Mac%E4%B8%8B%E7%9A%84npm%E3%80%81nrm%E3%80%81nvm/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Mac下的npm、nrm、nvm">Mac下的npm、nrm、nvm</span>
+            <span class="post-date" title="2021-10-28 15:06:21">2021/10/28</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/10/27/linux/%E4%BD%BF%E7%94%A8%E5%85%AC%E9%92%A5%E6%96%B9%E5%BC%8F%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用公钥方式登录服务器">使用公钥方式登录服务器</span>
+            <span class="post-date" title="2021-10-27 18:21:01">2021/10/27</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/09/06/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BD%BF%E7%94%A8go%E8%B0%83%E7%94%A8%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用go调用智能合约">使用go调用智能合约</span>
+            <span class="post-date" title="2021-09-06 10:59:04">2021/09/06</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/08/21/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%94%9F%E6%80%81(2)/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="创建自己的以太坊生态(2)">创建自己的以太坊生态(2)</span>
+            <span class="post-date" title="2021-08-21 18:50:00">2021/08/21</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/08/14/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%94%9F%E6%80%81(1)/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="创建自己的以太坊生态(1)">创建自己的以太坊生态(1)</span>
+            <span class="post-date" title="2021-08-14 17:08:59">2021/08/14</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/24/defi/uniswapV2(4)-%E5%91%A8%E8%BE%B9%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(4)-周边源码解析">uniswapV2(4)-周边源码解析</span>
+            <span class="post-date" title="2021-07-24 15:28:46">2021/07/24</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/20/defi/uniswapV2(3)-%E6%A0%B8%E5%BF%83%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(3)-源码解析">uniswapV2(3)-源码解析</span>
+            <span class="post-date" title="2021-07-20 09:30:01">2021/07/20</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/19/defi/uniswapV2(2)-%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91-/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(2)-运行逻辑">uniswapV2(2)-运行逻辑</span>
+            <span class="post-date" title="2021-07-19 18:55:32">2021/07/19</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/18/defi/uniswapV2(1)-%E7%99%BD%E7%9A%AE%E4%B9%A6%E7%BF%BB%E8%AF%91/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(1)-白皮书">uniswapV2(1)-白皮书</span>
+            <span class="post-date" title="2021-07-18 11:00:05">2021/07/18</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2021/05/26/%E5%8C%BA%E5%9D%97%E9%93%BE/filecoin%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="filecoin环境搭建">filecoin环境搭建</span>
+            <span class="post-date" title="2021-05-26 20:40:46">2021/05/26</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/04/15/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9%E5%8C%BA%E5%9D%97%E5%90%8C%E6%AD%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9区块同步源码解析">以太坊1.9区块同步源码解析</span>
+            <span class="post-date" title="2021-04-15 11:34:01">2021/04/15</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/03/18/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9consensus%E5%8C%85%E8%A7%A3%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9consensus包解析">以太坊1.9consensus包解析</span>
+            <span class="post-date" title="2021-03-18 16:31:11">2021/03/18</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/03/11/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9%E6%8C%96%E7%9F%BF%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9挖矿启动过程源码阅读">以太坊1.9挖矿启动过程源码阅读</span>
+            <span class="post-date" title="2021-03-11 10:57:33">2021/03/11</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/02/25/linux/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="git常用命令记录">git常用命令记录</span>
+            <span class="post-date" title="2021-02-25 19:14:01">2021/02/25</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2021/02/13/fabric/fabric%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric常用命令">fabric常用命令</span>
+            <span class="post-date" title="2021-02-13 21:22:35">2021/02/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/12/20/golang/gin%E5%85%A5%E9%97%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gin入门">gin入门</span>
+            <span class="post-date" title="2020-12-20 22:36:19">2020/12/20</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/11/13/golang/go%20build%E7%9A%84ldflag%E5%8F%82%E6%95%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="go build的ldflage参数">go build的ldflage参数</span>
+            <span class="post-date" title="2020-11-13 18:12:13">2020/11/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/11/12/golang/%E4%BD%BF%E7%94%A8gdb%E8%B0%83%E8%AF%95golang%E7%A8%8B%E5%BA%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用gdb调试golang程序">使用gdb调试golang程序</span>
+            <span class="post-date" title="2020-11-12 20:58:36">2020/11/12</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/10/27/linux/make%E5%8F%8Amakefile/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="make及makefile">make及makefile</span>
+            <span class="post-date" title="2020-10-27 15:16:33">2020/10/27</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/08/24/golang/%E5%88%A9%E7%94%A8reflect%E5%8C%85%E6%8A%8Astruct%E8%BD%AC-string/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="利用reflect包把struct转[]string">利用reflect包把struct转[]string</span>
+            <span class="post-date" title="2020-08-24 18:17:46">2020/08/24</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/07/18/fabric/fabric-go-sdk%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fabric-go-sdk的使用">fabric-go-sdk的使用</span>
+            <span class="post-date" title="2020-07-18 11:48:41">2020/07/18</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/07/18/fabric/fabric%E5%AD%A6%E4%B9%A0(11)%E2%80%94%E2%80%94fabric-ca%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(11)——fabric-ca的使用">fabric学习(11)——fabric-ca的使用</span>
+            <span class="post-date" title="2020-07-18 11:48:13">2020/07/18</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/07/13/linux/%E6%9F%A5%E7%9C%8B%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="查看机器配置">查看机器配置</span>
+            <span class="post-date" title="2020-07-13 18:11:11">2020/07/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/06/25/golang/beego%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%B7%AF%E7%94%B1%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/"
+           data-tag="beego"
+           data-author="" >
+            <span class="post-title" title="beego中设置路由的几种方式">beego中设置路由的几种方式</span>
+            <span class="post-date" title="2020-06-25 10:01:08">2020/06/25</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/06/11/linux/%E4%BF%AE%E6%94%B9%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%99%BB%E5%BD%95%E6%96%B9%E5%BC%8F%E4%B8%BA%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="修改亚马逊登录方式为密码登录">修改亚马逊登录方式为密码登录</span>
+            <span class="post-date" title="2020-06-11 18:01:05">2020/06/11</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/31/fabric/fabric%E5%AD%A6%E4%B9%A0(10)%E2%80%94%E2%80%94%E5%9C%A83%E4%B8%AA%E7%BB%84%E7%BB%87%E5%9F%BA%E7%A1%80%E4%B8%8A%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AAchannel/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(10)——在3个组织基础上新建一个channel">fabric学习(10)——在3个组织基础上新建一个channel</span>
+            <span class="post-date" title="2020-05-31 23:50:50">2020/05/31</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/25/fabric/fabric%E5%AD%A6%E4%B9%A0(9)%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8CouchDB%E5%8F%8A%E7%B4%A2%E5%BC%95%E7%9A%84%E6%93%8D%E4%BD%9C/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(9)——使用CouchDB及索引的操作">fabric学习(9)——使用CouchDB及索引的操作</span>
+            <span class="post-date" title="2020-05-25 13:14:51">2020/05/25</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/22/fabric/fabric%E5%AD%A6%E4%B9%A0(8)%E2%80%94%E2%80%94chaincode/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(8)——chaincode">fabric学习(8)——chaincode</span>
+            <span class="post-date" title="2020-05-22 15:04:56">2020/05/22</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/03/09/fabric/fabric%E5%AD%A6%E4%B9%A0(7)%E2%80%94%E2%80%94%E6%9B%B4%E6%96%B0channel%E9%85%8D%E7%BD%AE/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(7)——更新channel配置">fabric学习(7)——更新channel配置</span>
+            <span class="post-date" title="2020-03-09 20:20:10">2020/03/09</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/03/03/fabric/fabric%E5%AD%A6%E4%B9%A0(6)%E2%80%94%E2%80%94%E6%B7%BB%E5%8A%A0%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84(2)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(6)——添加组织机构(2)">fabric学习(6)——添加组织机构(2)</span>
+            <span class="post-date" title="2020-03-03 14:25:01">2020/03/03</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/26/fabric/fabric%E5%AD%A6%E4%B9%A0(5)%E2%80%94%E2%80%94%E6%B7%BB%E5%8A%A0%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84(1)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(5)——添加组织机构(1)">fabric学习(5)——添加组织机构(1)</span>
+            <span class="post-date" title="2020-02-26 19:35:11">2020/02/26</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/23/fabric/fabric%E5%AD%A6%E4%B9%A0(4)%E2%80%94%E2%80%94%E5%9C%A8%E6%96%B0%E5%88%9B%E5%BB%BA%E7%9A%84%E8%81%94%E7%9B%9F%E4%B8%AD%E5%88%9B%E5%BB%BAchannel/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(4)——在新创建的联盟中创建channel">fabric学习(4)——在新创建的联盟中创建channel</span>
+            <span class="post-date" title="2020-02-23 09:40:01">2020/02/23</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/22/fabric/fabric%E5%AD%A6%E4%B9%A0(3)%E2%80%94%E2%80%94%E5%88%9B%E5%BB%BA%E8%81%94%E7%9B%9F/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(3)——创建联盟">fabric学习(3)——创建联盟</span>
+            <span class="post-date" title="2020-02-22 15:47:48">2020/02/22</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/19/fabric/fabric%E5%AD%A6%E4%B9%A0(2)%E2%80%94%E2%80%94%E4%B8%8D%E4%BD%BF%E7%94%A8byfn%E6%90%AD%E5%BB%BAfabric%E7%BD%91%E7%BB%9C(2)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(2)——不使用byfn搭建fabric网络(2)">fabric学习(2)——不使用byfn搭建fabric网络(2)</span>
+            <span class="post-date" title="2020-02-19 13:30:01">2020/02/19</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/18/fabric/fabric%E5%AD%A6%E4%B9%A0(1)%E2%80%94%E2%80%94%E4%B8%8D%E4%BD%BF%E7%94%A8byfn%E6%90%AD%E5%BB%BAfabric%E7%BD%91%E7%BB%9C(1)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(1)——不使用byfn搭建fabric网络(1)">fabric学习(1)——不使用byfn搭建fabric网络(1)</span>
+            <span class="post-date" title="2020-02-18 11:47:58">2020/02/18</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/12/10/golang/gomod%E3%80%81govendor%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gomod、govendor的使用">gomod、govendor的使用</span>
+            <span class="post-date" title="2019-12-10 11:46:56">2019/12/10</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2019/11/30/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BF%AE%E6%94%B9%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%9A%84%E5%9C%B0%E5%9D%80%E6%80%9D%E8%B7%AF/"
+           data-tag="以太坊"
+           data-author="" >
+            <span class="post-title" title="修改以太坊的地址思路">修改以太坊的地址思路</span>
+            <span class="post-date" title="2019-11-30 18:00:32">2019/11/30</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/11/11/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%9B%B6%E7%9F%A5%E8%AF%86%E8%AF%81%E6%98%8E/"
+           data-tag="零知识证明"
+           data-author="" >
+            <span class="post-title" title="零知识证明">零知识证明</span>
+            <span class="post-date" title="2019-11-11 21:16:00">2019/11/11</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/10/28/%E5%8C%BA%E5%9D%97%E9%93%BE/%E8%B7%AF%E5%8D%B0%E5%8D%8F%E8%AE%AE/"
+           data-tag="路印协议"
+           data-author="" >
+            <span class="post-title" title="路印协议">路印协议</span>
+            <span class="post-date" title="2019-10-28 13:31:35">2019/10/28</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/10/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%B8%89)%E8%87%AA%E5%AE%9A%E4%B9%89DeliverTx%E7%9A%84%E5%93%8D%E5%BA%94/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(三)自定义DeliverTx的响应">tendermint提供的RPC接口(三)自定义DeliverTx的响应</span>
+            <span class="post-date" title="2019-09-10 18:21:01">2019/09/10</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/09/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%BA%8C)/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(二)">tendermint提供的RPC接口(二)</span>
+            <span class="post-date" title="2019-09-09 18:09:33">2019/09/09</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/08/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%B8%80)/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(一)">tendermint提供的RPC接口(一)</span>
+            <span class="post-date" title="2019-09-08 17:54:23">2019/09/08</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/06/%E5%8C%BA%E5%9D%97%E9%93%BE/windows%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8tendermint/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="windows环境使用tendermint">windows环境使用tendermint</span>
+            <span class="post-date" title="2019-09-06 11:52:00">2019/09/06</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/08/28/golang/sync.Mutex%E4%BA%92%E6%96%A5%E9%94%81%E7%9A%84%E7%94%A8%E6%B3%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sync.Mutex互斥锁的用法">sync.Mutex互斥锁的用法</span>
+            <span class="post-date" title="2019-08-28 11:10:01">2019/08/28</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/08/24/golang/defer%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="defer的执行顺序">defer的执行顺序</span>
+            <span class="post-date" title="2019-08-24 18:30:39">2019/08/24</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/07/12/golang/Go%E8%AF%AD%E8%A8%80%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BA%93urfave-cli%E7%AE%80%E4%BB%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Go语言命令行库urfave/cli简介">Go语言命令行库urfave/cli简介</span>
+            <span class="post-date" title="2019-07-12 20:49:46">2019/07/12</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2019/07/12/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E9%98%BB%E6%AD%A2%E6%97%A5%E8%9A%80%E6%94%BB%E5%87%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊阻止日蚀攻击">以太坊阻止日蚀攻击</span>
+            <span class="post-date" title="2019-07-12 20:49:46">2019/07/12</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/05/23/golang/golang%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="golang时间戳转换">golang时间戳转换</span>
+            <span class="post-date" title="2019-05-23 14:32:13">2019/05/23</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/02/28/golang/Go%E8%A7%84%E8%8C%83/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Go规范">Go规范</span>
+            <span class="post-date" title="2019-02-28 11:30:10">2019/02/28</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/01/11/golang/fmt%E6%A0%BC%E5%BC%8F%E5%8D%A0%E4%BD%8D%E7%AC%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fmt格式占位符">fmt格式占位符</span>
+            <span class="post-date" title="2019-01-11 15:41:31">2019/01/11</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2018/09/14/%E4%BB%A5%E5%A4%AA%E5%9D%8A/solidity%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/"
+           data-tag="以太坊"
+           data-author="" >
+            <span class="post-title" title="solidity知识点总结">solidity知识点总结</span>
+            <span class="post-date" title="2018-09-14 21:24:04">2018/09/14</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/07/11/%E5%8C%BA%E5%9D%97%E9%93%BE/PBFT%E6%AF%8F%E4%B8%AA%E6%AD%A5%E9%AA%A4%E7%9A%84%E8%AF%A6%E7%BB%86%E6%B6%88%E6%81%AF%E8%A6%81%E7%B4%A0%E5%92%8C%E7%AD%BE%E5%90%8D%E5%86%85%E5%AE%B9/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="PBFT每个步骤的详细消息要素和签名内容">PBFT每个步骤的详细消息要素和签名内容</span>
+            <span class="post-date" title="2018-07-11 16:03:46">2018/07/11</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/05/21/%E5%8C%BA%E5%9D%97%E9%93%BE/%E6%AF%94%E7%89%B9%E5%B8%81%E4%BB%A5%E5%A4%AA%E5%9D%8Aeos%E5%9C%B0%E5%9D%80%E7%94%9F%E6%88%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="比特币以太坊eos地址生成">比特币以太坊eos地址生成</span>
+            <span class="post-date" title="2018-05-21 15:06:12">2018/05/21</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2018/04/03/fabric/fabric%E6%A3%80%E6%9F%A5%E7%82%B9(checkpoint)%E5%88%86%E6%9E%90/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric检查点(checkpoint)分析">fabric检查点(checkpoint)分析</span>
+            <span class="post-date" title="2018-04-03 11:27:55">2018/04/03</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/03/28/%E5%8C%BA%E5%9D%97%E9%93%BE/%E5%90%84%E7%A7%8D%E4%B8%BB%E6%B5%81%E9%93%BE%E7%9A%84HASH%E7%AE%97%E6%B3%95%E3%80%81PKI%E5%8F%8A%E7%A7%98%E9%92%A5%E9%95%BF%E5%BA%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="各种主流链的HASH算法、PKI及秘钥长度">各种主流链的HASH算法、PKI及秘钥长度</span>
+            <span class="post-date" title="2018-03-28 19:17:47">2018/03/28</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/03/22/%E5%8C%BA%E5%9D%97%E9%93%BE/%E6%AF%94%E7%89%B9%E5%B8%81%E3%80%81%E4%BB%A5%E5%A4%AA%E5%9D%8A%E3%80%81%E6%AF%94%E7%89%B9%E8%82%A1%E6%97%B6%E9%97%B4%E8%AF%AF%E5%B7%AE%E5%A4%84%E7%90%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="比特币、以太坊、比特股时间误差处理">比特币、以太坊、比特股时间误差处理</span>
+            <span class="post-date" title="2018-03-22 16:29:07">2018/03/22</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2017/07/11/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux常用命令记录">linux常用命令记录</span>
+            <span class="post-date" title="2017-07-11 17:15:21">2017/07/11</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2017/05/23/%E6%95%B0%E6%8D%AE%E5%BA%93/orcale%E5%88%A0%E9%99%A4%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E4%B8%8B%E6%89%80%E6%9C%89%E7%9A%84%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="orcale删除当前用户下所有的表">orcale删除当前用户下所有的表</span>
+            <span class="post-date" title="2017-05-23 15:44:01">2017/05/23</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2017/04/19/%E6%95%B0%E6%8D%AE%E5%BA%93/oracle%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="oracle控制台常用命令">oracle控制台常用命令</span>
+            <span class="post-date" title="2017-04-19 17:17:09">2017/04/19</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2016/10/25/%E6%95%B0%E6%8D%AE%E5%BA%93/sqlserver%E8%A7%A3%E5%86%B3%E9%94%81%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sqlserver解决锁表">sqlserver解决锁表</span>
+            <span class="post-date" title="2016-10-25 10:21:43">2016/10/25</span>
+        </a>
+        
+        <a  class="全部文章 java "
+           href="/2016/10/20/java/eclipse%E6%93%8D%E4%BD%9C/"
+           data-tag="java"
+           data-author="" >
+            <span class="post-title" title="eclipse操作">eclipse操作</span>
+            <span class="post-date" title="2016-10-20 11:07:48">2016/10/20</span>
+        </a>
+        
+        <a  class="全部文章 java "
+           href="/2016/08/25/java/keytool%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6%E8%AF%B7%E6%B1%82%E6%96%87%E4%BB%B6(.csr)/"
+           data-tag="java"
+           data-author="" >
+            <span class="post-title" title="keytool生成证书请求文件（.csr）">keytool生成证书请求文件（.csr）</span>
+            <span class="post-date" title="2016-08-25 13:07:48">2016/08/25</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-区块链/tendermint提供的RPC接口(三)自定义DeliverTx的响应" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">tendermint提供的RPC接口(三)自定义DeliverTx的响应</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="区块链">区块链</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color4">区块链</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2022-01-09 16:41:09'>2019-09-10 18:21</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:1.1k</span>
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3-%E4%B8%89-%E8%87%AA%E5%AE%9A%E4%B9%89DeliverTx%E7%9A%84%E5%93%8D%E5%BA%94"><span class="toc-text">tendermint提供的RPC接口(三)自定义DeliverTx的响应</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="tendermint提供的RPC接口-三-自定义DeliverTx的响应"><a href="#tendermint提供的RPC接口-三-自定义DeliverTx的响应" class="headerlink" title="tendermint提供的RPC接口(三)自定义DeliverTx的响应"></a>tendermint提供的RPC接口(三)自定义DeliverTx的响应</h2><p>接上两篇：</p>
+<p><a href="https://caohuan.tech/2019/09/08/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%B8%80)/">tendermint提供的RPC接口(一)</a></p>
+<p><a href="https://caohuan.tech/2019/09/09/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%BA%8C)/">tendermint提供的RPC接口(二)</a></p>
+<p>本文是系列文章第三篇，主要介绍如何自定义订阅事件。</p>
+<p><strong>/subscribe</strong></p>
+<p><strong>说明：</strong>通过wensocket订阅事件。</p>
+<p>想要订阅某个事件，需要提供一个字符串表达式，格式是“condition AND condition ”(只能用AND不能用OR)。condition的格式是“key operation operand”，</p>
+<p>key是一个字符串(\t\n\r()’”=&gt;&lt;不允许出现在key中)</p>
+<p>operation可以是“=”，“&lt;”，“&lt;=”，“&gt;”，“&gt; =”， “CONTAINS”</p>
+<p>operand可以是一个字符串(要用单引号转义)，数字，日期或者事件。</p>
+<p>比如：</p>
+<pre><code class="go"> tm.event = &#39;NewBlock&#39; // 新区快产生
+ tm.event = &#39;CompleteProposal&#39; // 完成一个提案
+ tm.event = &#39;Tx&#39; AND tx.hash = &#39;XYZ&#39; // 某一笔交易
+ tm.event = &#39;Tx&#39; AND tx.height = 5 // 第五个块的所有交易
+ tx.height = 5 // 第五个块的所有交易
+</code></pre>
+<p>tendermint提供了几个预定义的key：tm.event，tx.hash，tx.height。但是用户可以通过重定义DeliverTx的响应来增加key，用以订阅其他的事件。例如定义以下event</p>
+<pre><code class="go">types.ResponseDeliverTx&#123;
+  Events: []types.Event&#123;
+    &#123;
+     Type: &quot;rewards.withdraw&quot;,
+     Attributes:
+     common.KVPairs&#123;
+       common.KVPair&#123;Key: []byte(&quot;address&quot;), Value: []byte(&quot;AddrA&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;source&quot;), Value: []byte(&quot;SrcX&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;amount&quot;), Value: []byte(&quot;...&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;balance&quot;), Value: []byte(&quot;...&quot;)&#125;,
+     &#125;,
+    &#125;,
+    &#123;
+     Type: &quot;rewards.withdraw&quot;,
+     Attributes: common.KVPairs&#123;
+       common.KVPair&#123;Key: []byte(&quot;address&quot;), Value: []byte(&quot;AddrB&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;source&quot;), Value: []byte(&quot;SrcY&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;amount&quot;), Value: []byte(&quot;...&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;balance&quot;), Value: []byte(&quot;...&quot;)&#125;,
+     &#125;,
+    &#125;,
+    &#123;
+     Type: &quot;transfer&quot;,
+     Attributes: common.KVPairs&#123;
+       common.KVPair&#123;Key: []byte(&quot;sender&quot;), Value: []byte(&quot;AddrC&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;recipient&quot;), Value: []byte(&quot;AddrD&quot;)&#125;,
+       common.KVPair&#123;Key: []byte(&quot;amount&quot;), Value: []byte(&quot;...&quot;)&#125;,
+     &#125;,
+    &#125;,
+  &#125;,
+ &#125;
+</code></pre>
+<p>所有事件都由eventType和eventAttrKey形式的符合键索引，在上面的示例中，将对以下键进行索引：</p>
+<pre><code class="go">rewards.withdraw.address
+rewards.withdraw.source
+rewards.withdraw.amount
+rewards.withdraw.balance
+transfer.sender
+transfer.recipient
+transfer.amount
+</code></pre>
+<p>允许多个事件类型具有重复的键，并且可以用于对唯一和不同事件进行分类。<br>在上面的示例中，在密钥rewards.withdraw.address下索引的所有事件将具有以下存储和可查询的值：AddrA，AddrB</p>
+<p>创建各种类型的交易订阅：</p>
+<pre><code class="go">query.MustParse(&quot;tm.event = &#39;Tx&#39; AND rewards.withdraw.address = &#39;AddrA&#39;&quot;)
+query.MustParse(&quot;tm.event = &#39;Tx&#39; AND rewards.withdraw.address = &#39;AddrA&#39; AND rewards.withdraw.source = &#39;Y&#39;&quot;)
+query.MustParse(&quot;tm.event = &#39;Tx&#39; AND transfer.sender = &#39;AddrA&#39;&quot;)
+</code></pre>
+<p>这几种是无返回值的：</p>
+<pre><code class="go">query.MustParse(&quot;tm.event = &#39;Tx&#39; AND transfer.sender = &#39;AddrZ&#39;&quot;)
+query.MustParse(&quot;tm.event = &#39;Tx&#39; AND rewards.withdraw.address = &#39;AddrZ&#39;&quot;)
+query.MustParse(&quot;tm.event = &#39;Tx&#39; AND rewards.withdraw.source = &#39;W&#39;&quot;)
+</code></pre>
+<p>下面是示例。<br>自定义的event代码：</p>
+<pre><code class="go">var events []types.Event
+if strings.HasPrefix(k,&quot;a&quot;)&#123;
+   events = []types.Event&#123;
+      &#123;
+         Type: &quot;string&quot;,
+         Attributes: []common.KVPair&#123;
+            &#123;Key: []byte(&quot;startWith&quot;), Value: []byte(&quot;a&quot;)&#125;,
+            &#123;Key: []byte(&quot;key&quot;), Value: key&#125;,
+         &#125;,
+      &#125;,
+   &#125;
+&#125;
+if strings.HasPrefix(k,&quot;b&quot;)&#123;
+   events = []types.Event&#123;
+      &#123;
+         Type: &quot;string&quot;,
+         Attributes: []common.KVPair&#123;
+            &#123;Key: []byte(&quot;startWith&quot;), Value: []byte(&quot;b&quot;)&#125;,
+            &#123;Key: []byte(&quot;key&quot;), Value: key&#125;,
+         &#125;,
+      &#125;,
+   &#125;
+&#125;
+</code></pre>
+<p>订阅代码分为2个线程：</p>
+<pre><code class="go">func main() &#123;
+   cli := client.NewHTTP(&quot;http://localhost:26657&quot;, &quot;/websocket&quot;)
+   err := cli.Start()
+   if err != nil &#123;
+      fmt.Println(err)
+      return
+   &#125;
+   defer cli.Stop()
+   ctx, cancel := context.WithTimeout(context.Background(), 1time.Second)
+   defer cancel()
+   //query := &quot;app.key=&#39;author&#39;&quot;
+   txs, err := cli.Subscribe(ctx, &quot;test-client&quot;, &quot;string.startWith = &#39;a&#39;&quot;)
+   if err != nil &#123;
+      fmt.Println(&quot;错误信息&quot;, err)
+      return
+   &#125;
+   for tx := range txs &#123;
+      fmt.Println(&quot;startWithA接收到消息：\n&quot;, tx)
+   &#125;
+&#125;
+func main() &#123;
+   cli := client.NewHTTP(&quot;http://localhost:26657&quot;, &quot;/websocket&quot;)
+   err := cli.Start()
+   if err != nil &#123;
+      fmt.Println(err)
+      return
+   &#125;
+   defer cli.Stop()
+   ctx, cancel := context.WithTimeout(context.Background(), 1time.Second)
+   defer cancel()
+   //query := &quot;app.key=&#39;author&#39;&quot;
+   txs, err := cli.Subscribe(ctx, &quot;test-client&quot;, &quot;string.startWith = &#39;b&#39;&quot;)
+   if err != nil &#123;
+      fmt.Println(&quot;错误信息&quot;, err)
+      return
+   &#125;
+   for tx := range txs &#123;
+      fmt.Println(&quot;startWithB接收到消息：\n&quot;, tx)
+   &#125;
+&#125;
+</code></pre>
+<p>分别发送交易：</p>
+<pre><code class="cmd">curl -s localhost:26657/broadcast_tx_commit?tx=\&quot;aunt=a1234\&quot;
+curl -s localhost:26657/broadcast_tx_commit?tx=\&quot;buss=b5678\&quot;
+</code></pre>
+<p>可以看到两个窗口分别收到消息：</p>
+<p><img src="data:image/png;base64,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"></p>
+<p><img src="data:image/png;base64,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"></p>
+<p>这只是一个示例，在实际使用过程中会更加复杂一些，例如对某个交易地址的监控，对大额转账的监控等等。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2017 caohuan
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
