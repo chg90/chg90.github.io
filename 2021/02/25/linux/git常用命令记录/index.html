@@ -812,7 +812,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2021-12-26 22:13:13'>2021-02-25 19:14</time>
+            发布时间 : <time class="date" title='最后更新: 2022-01-13 13:46:40'>2021-02-25 19:14</time>
         
     </div>
     <div class="article-meta">
@@ -952,7 +952,11 @@ git submodule add /path/to/repos/libA.git
 <pre><code>$ git commit -m &quot;add modules in lib/lib_a&quot;
 $ git push
 </code></pre>
-<p>在提交过程中，发现作为子模组方式添加的版本库实际上并没有添加版本库的内容。实际上只是以gitlink方式[1]添加了一个链接。至于子模组的实际地址，是由文件.gitmodules中指定的。<br>gitsubmodule详细：<a target="_blank" rel="noopener" href="https://blog.csdn.net/THEGREATHXY/article/details/113880095">https://blog.csdn.net/THEGREATHXY/article/details/113880095</a></p>
+<p>在提交过程中，发现作为子模组方式添加的版本库实际上并没有添加版本库的内容。实际上只是以gitlink方式[1]添加了一个链接。至于子模组的实际地址，是由文件.gitmodules中指定的。</p>
+<p>更新</p>
+<pre><code>$ git submodule update
+</code></pre>
+<p>gitsubmodule详细：<a target="_blank" rel="noopener" href="https://blog.csdn.net/THEGREATHXY/article/details/113880095">https://blog.csdn.net/THEGREATHXY/article/details/113880095</a></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源 </span>
