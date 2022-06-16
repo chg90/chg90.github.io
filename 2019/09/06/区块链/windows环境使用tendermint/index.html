@@ -6,15 +6,15 @@
   <meta name="keywords" content=" 区块链 ">
   <meta name="description" content="windows环境使用tendermint | 曹欢的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="环境介绍1.Dockerfile中所用的所有文件一定要和Dockerfile文件在同一级父目录下，可以为Dockerfile父目录的子目录2.Dockerfile中相对路径默认都是Dockerfile所在的目录3.Dockerfile中一定要惜字如金，能写到一行的指令，一定要写到一行，原因是分层构建，联合挂载这个特性。Dockerfile中每一条指令被视为一层4.Dockerfile中指明大写（约">
+<meta name="description" content="使用centos7 下载go版本ipfs，解压： https:&#x2F;&#x2F;dist.ipfs.io&#x2F;go-ipfs&#x2F;v0.13.0&#x2F;go-ipfs_v0.13.0_linux-amd64.tar.gz  tar -zxf go-ipfs_v0.13.0_linux-amd64.tar.gz   安装 cd go-ipfs .&#x2F;install.sh  Moved .&#x2F;ipfs to &#x2F;usr&#x2F;local&#x2F;b">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Dockerfile">
-<meta property="og:url" content="https://caohuan.tech/2021/12/26/linux/Dockerfile/index.html">
+<meta property="og:title" content="ipfs私网搭建">
+<meta property="og:url" content="https://caohuan.tech/2022/06/15/%E5%8C%BA%E5%9D%97%E9%93%BE/ipfs%E7%A7%81%E7%BD%91%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="曹欢的博客">
-<meta property="og:description" content="环境介绍1.Dockerfile中所用的所有文件一定要和Dockerfile文件在同一级父目录下，可以为Dockerfile父目录的子目录2.Dockerfile中相对路径默认都是Dockerfile所在的目录3.Dockerfile中一定要惜字如金，能写到一行的指令，一定要写到一行，原因是分层构建，联合挂载这个特性。Dockerfile中每一条指令被视为一层4.Dockerfile中指明大写（约">
+<meta property="og:description" content="使用centos7 下载go版本ipfs，解压： https:&#x2F;&#x2F;dist.ipfs.io&#x2F;go-ipfs&#x2F;v0.13.0&#x2F;go-ipfs_v0.13.0_linux-amd64.tar.gz  tar -zxf go-ipfs_v0.13.0_linux-amd64.tar.gz   安装 cd go-ipfs .&#x2F;install.sh  Moved .&#x2F;ipfs to &#x2F;usr&#x2F;local&#x2F;b">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-12-26T05:46:26.000Z">
-<meta property="article:modified_time" content="2021-12-26T14:19:28.264Z">
+<meta property="article:published_time" content="2022-06-15T00:30:02.000Z">
+<meta property="article:modified_time" content="2022-06-16T03:46:45.269Z">
 <meta property="article:author" content="caohuan">
 <meta name="twitter:card" content="summary">
 
@@ -70,7 +70,7 @@
 
 
 <ul>
-    <li><div class="all active" data-rel="全部文章">全部文章<small>(68)</small></div></li>
+    <li><div class="all active" data-rel="全部文章">全部文章<small>(75)</small></div></li>
     
         
             
@@ -98,7 +98,7 @@
     
         
             
-            <li><div data-rel="区块链">区块链<small>(13)</small></div>
+            <li><div data-rel="区块链">区块链<small>(18)</small></div>
                 
             </li>
             
@@ -122,7 +122,7 @@
     
         
             
-            <li><div data-rel="linux">linux<small>(11)</small></div>
+            <li><div data-rel="linux">linux<small>(13)</small></div>
                 
             </li>
             
@@ -146,8 +146,8 @@
     </div>
     <div></div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="68">
-<input type="hidden" id="yelog_site_word_count" value="125.6k">
+<input type="hidden" id="yelog_site_posts_number" value="75">
+<input type="hidden" id="yelog_site_word_count" value="142.7k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -231,6 +231,62 @@
     
     <nav id="title-list-nav">
         
+        <a  class="全部文章 区块链 "
+           href="/2022/06/15/%E5%8C%BA%E5%9D%97%E9%93%BE/ipfs%E7%A7%81%E7%BD%91%E6%90%AD%E5%BB%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="ipfs私网搭建">ipfs私网搭建</span>
+            <span class="post-date" title="2022-06-15 08:30:02">2022/06/15</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2022/06/14/linux/%E5%AE%89%E8%A3%85leveldb/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="安装leveldb">安装leveldb</span>
+            <span class="post-date" title="2022-06-14 20:10:08">2022/06/14</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/03/01/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE5-%E4%BD%BF%E7%94%A8docker%E9%85%8D%E7%BD%AEfabric%E5%90%8C%E6%9E%84%E8%B7%A8%E9%93%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议5-使用docker配置fabric同构跨链">陆羽协议5-使用docker配置fabric同构跨链</span>
+            <span class="post-date" title="2022-03-01 19:31:28">2022/03/01</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/02/21/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE4-%E5%BC%82%E6%9E%84%E8%B7%A8%E9%93%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议4-异构跨链">陆羽协议4-异构跨链</span>
+            <span class="post-date" title="2022-02-21 13:15:56">2022/02/21</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/02/13/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE3-%E5%90%8C%E6%9E%84%E8%B7%A8%E9%93%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议3-同构跨链">陆羽协议3-同构跨链</span>
+            <span class="post-date" title="2022-02-13 21:05:36">2022/02/13</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/02/11/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE2-%E5%90%8C%E6%9E%84%E5%A4%9A%E9%93%BE%E4%BA%92%E7%9B%B8%E8%AE%BF%E9%97%AE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议2-同构多链互相访问">陆羽协议2-同构多链互相访问</span>
+            <span class="post-date" title="2022-02-11 17:47:04">2022/02/11</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2022/01/13/linux/k8s%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="k8s常用命令记录">k8s常用命令记录</span>
+            <span class="post-date" title="2022-01-13 20:21:03">2022/01/13</span>
+        </a>
+        
         <a  class="全部文章 linux "
            href="/2021/12/26/linux/Dockerfile/"
            data-tag=""
@@ -248,27 +304,19 @@
         </a>
         
         <a  class="全部文章 区块链 "
-           href="/2021/12/12/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE1-%E5%8D%95%E9%93%BE%E8%B0%83%E7%94%A8/"
+           href="/2021/12/21/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE1-%E5%8D%95%E9%93%BE%E8%B0%83%E7%94%A8/"
            data-tag=""
            data-author="" >
             <span class="post-title" title="陆羽协议1-单链调用">陆羽协议1-单链调用</span>
-            <span class="post-date" title="2021-12-12 17:43:01">2021/12/12</span>
+            <span class="post-date" title="2021-12-21 15:33:59">2021/12/21</span>
         </a>
         
         <a  class="全部文章 区块链 "
-           href="/2021/12/12/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/"
+           href="/2021/12/12/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/"
            data-tag=""
            data-author="" >
             <span class="post-title" title="陆羽协议">陆羽协议</span>
             <span class="post-date" title="2021-12-12 16:27:17">2021/12/12</span>
-        </a>
-        
-        <a  class="全部文章 linux "
-           href="/2021/12/12/linux/%E5%90%84%E7%A7%8D%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%90%84%E7%A7%8D%E5%8C%85%E7%9A%84%E5%AE%89%E8%A3%85/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="各种环境下各种包的安装">各种环境下各种包的安装</span>
-            <span class="post-date" title="2021-12-12 15:19:19">2021/12/12</span>
         </a>
         
         <a  class="全部文章 linux "
@@ -349,6 +397,14 @@
            data-author="" >
             <span class="post-title" title="uniswapV2(1)-白皮书">uniswapV2(1)-白皮书</span>
             <span class="post-date" title="2021-07-18 11:00:05">2021/07/18</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/06/11/linux/%E5%90%84%E7%A7%8D%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%90%84%E7%A7%8D%E5%8C%85%E7%9A%84%E5%AE%89%E8%A3%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="各种环境下各种包的安装">各种环境下各种包的安装</span>
+            <span class="post-date" title="2021-06-11 23:21:44">2021/06/11</span>
         </a>
         
         <a  class="全部文章 区块链 "

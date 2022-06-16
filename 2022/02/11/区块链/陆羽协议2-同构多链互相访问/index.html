@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>陆羽协议2-同构多链互相访问 | 曹欢的博客</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="陆羽协议2-同构多链互相访问 | 曹欢的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="使用centos7 下载go版本ipfs，解压： https:&#x2F;&#x2F;dist.ipfs.io&#x2F;go-ipfs&#x2F;v0.13.0&#x2F;go-ipfs_v0.13.0_linux-amd64.tar.gz  tar -zxf go-ipfs_v0.13.0_linux-amd64.tar.gz   安装 cd go-ipfs .&#x2F;install.sh  Moved .&#x2F;ipfs to &#x2F;usr&#x2F;local&#x2F;b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ipfs私网搭建">
+<meta property="og:url" content="https://caohuan.tech/2022/06/15/%E5%8C%BA%E5%9D%97%E9%93%BE/ipfs%E7%A7%81%E7%BD%91%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="曹欢的博客">
+<meta property="og:description" content="使用centos7 下载go版本ipfs，解压： https:&#x2F;&#x2F;dist.ipfs.io&#x2F;go-ipfs&#x2F;v0.13.0&#x2F;go-ipfs_v0.13.0_linux-amd64.tar.gz  tar -zxf go-ipfs_v0.13.0_linux-amd64.tar.gz   安装 cd go-ipfs .&#x2F;install.sh  Moved .&#x2F;ipfs to &#x2F;usr&#x2F;local&#x2F;b">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-15T00:30:02.000Z">
+<meta property="article:modified_time" content="2022-06-16T03:46:45.269Z">
+<meta property="article:author" content="caohuan">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="false" />
+</div>
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.jpg" />
+</a>
+<div class="author">
+    <span>caohuan</span>
+</div>
+
+<div class="icon">
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active" data-rel="全部文章">全部文章<small>(75)</small></div></li>
+    
+        
+            
+            <li><div data-rel="以太坊">以太坊<small>(9)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="defi">defi<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="fabric">fabric<small>(14)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="区块链">区块链<small>(18)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="golang">golang<small>(12)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="java">java<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="linux">linux<small>(13)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="数据库">数据库<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="75">
+<input type="hidden" id="yelog_site_word_count" value="142.7k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" />
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>零知识证明</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>路印协议</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>区块链</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>以太坊</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>beego</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>defi</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>fabric</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>java</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/06/15/%E5%8C%BA%E5%9D%97%E9%93%BE/ipfs%E7%A7%81%E7%BD%91%E6%90%AD%E5%BB%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="ipfs私网搭建">ipfs私网搭建</span>
+            <span class="post-date" title="2022-06-15 08:30:02">2022/06/15</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2022/06/14/linux/%E5%AE%89%E8%A3%85leveldb/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="安装leveldb">安装leveldb</span>
+            <span class="post-date" title="2022-06-14 20:10:08">2022/06/14</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/03/01/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE5-%E4%BD%BF%E7%94%A8docker%E9%85%8D%E7%BD%AEfabric%E5%90%8C%E6%9E%84%E8%B7%A8%E9%93%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议5-使用docker配置fabric同构跨链">陆羽协议5-使用docker配置fabric同构跨链</span>
+            <span class="post-date" title="2022-03-01 19:31:28">2022/03/01</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/02/21/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE4-%E5%BC%82%E6%9E%84%E8%B7%A8%E9%93%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议4-异构跨链">陆羽协议4-异构跨链</span>
+            <span class="post-date" title="2022-02-21 13:15:56">2022/02/21</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/02/13/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE3-%E5%90%8C%E6%9E%84%E8%B7%A8%E9%93%BE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议3-同构跨链">陆羽协议3-同构跨链</span>
+            <span class="post-date" title="2022-02-13 21:05:36">2022/02/13</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2022/02/11/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE2-%E5%90%8C%E6%9E%84%E5%A4%9A%E9%93%BE%E4%BA%92%E7%9B%B8%E8%AE%BF%E9%97%AE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议2-同构多链互相访问">陆羽协议2-同构多链互相访问</span>
+            <span class="post-date" title="2022-02-11 17:47:04">2022/02/11</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2022/01/13/linux/k8s%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="k8s常用命令记录">k8s常用命令记录</span>
+            <span class="post-date" title="2022-01-13 20:21:03">2022/01/13</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/12/26/linux/Dockerfile/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Dockerfile">Dockerfile</span>
+            <span class="post-date" title="2021-12-26 13:46:26">2021/12/26</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/12/25/linux/docker%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="docker命令">docker命令</span>
+            <span class="post-date" title="2021-12-25 19:34:51">2021/12/25</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2021/12/21/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE1-%E5%8D%95%E9%93%BE%E8%B0%83%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议1-单链调用">陆羽协议1-单链调用</span>
+            <span class="post-date" title="2021-12-21 15:33:59">2021/12/21</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2021/12/12/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%99%86%E7%BE%BD%E5%8D%8F%E8%AE%AE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="陆羽协议">陆羽协议</span>
+            <span class="post-date" title="2021-12-12 16:27:17">2021/12/12</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/11/14/k8s/Kubernetes%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="k8s">k8s</span>
+            <span class="post-date" title="2021-11-14 12:54:20">2021/11/14</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/10/28/linux/Mac%E4%B8%8B%E7%9A%84npm%E3%80%81nrm%E3%80%81nvm/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Mac下的npm、nrm、nvm">Mac下的npm、nrm、nvm</span>
+            <span class="post-date" title="2021-10-28 15:06:21">2021/10/28</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/10/27/linux/%E4%BD%BF%E7%94%A8%E5%85%AC%E9%92%A5%E6%96%B9%E5%BC%8F%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用公钥方式登录服务器">使用公钥方式登录服务器</span>
+            <span class="post-date" title="2021-10-27 18:21:01">2021/10/27</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/09/06/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BD%BF%E7%94%A8go%E8%B0%83%E7%94%A8%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用go调用智能合约">使用go调用智能合约</span>
+            <span class="post-date" title="2021-09-06 10:59:04">2021/09/06</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/08/21/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%94%9F%E6%80%81(2)/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="创建自己的以太坊生态(2)">创建自己的以太坊生态(2)</span>
+            <span class="post-date" title="2021-08-21 18:50:00">2021/08/21</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/08/14/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%94%9F%E6%80%81(1)/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="创建自己的以太坊生态(1)">创建自己的以太坊生态(1)</span>
+            <span class="post-date" title="2021-08-14 17:08:59">2021/08/14</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/24/defi/uniswapV2(4)-%E5%91%A8%E8%BE%B9%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(4)-周边源码解析">uniswapV2(4)-周边源码解析</span>
+            <span class="post-date" title="2021-07-24 15:28:46">2021/07/24</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/20/defi/uniswapV2(3)-%E6%A0%B8%E5%BF%83%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(3)-源码解析">uniswapV2(3)-源码解析</span>
+            <span class="post-date" title="2021-07-20 09:30:01">2021/07/20</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/19/defi/uniswapV2(2)-%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91-/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(2)-运行逻辑">uniswapV2(2)-运行逻辑</span>
+            <span class="post-date" title="2021-07-19 18:55:32">2021/07/19</span>
+        </a>
+        
+        <a  class="全部文章 defi "
+           href="/2021/07/18/defi/uniswapV2(1)-%E7%99%BD%E7%9A%AE%E4%B9%A6%E7%BF%BB%E8%AF%91/"
+           data-tag="defi"
+           data-author="" >
+            <span class="post-title" title="uniswapV2(1)-白皮书">uniswapV2(1)-白皮书</span>
+            <span class="post-date" title="2021-07-18 11:00:05">2021/07/18</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/06/11/linux/%E5%90%84%E7%A7%8D%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%90%84%E7%A7%8D%E5%8C%85%E7%9A%84%E5%AE%89%E8%A3%85/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="各种环境下各种包的安装">各种环境下各种包的安装</span>
+            <span class="post-date" title="2021-06-11 23:21:44">2021/06/11</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2021/05/26/%E5%8C%BA%E5%9D%97%E9%93%BE/filecoin%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="filecoin环境搭建">filecoin环境搭建</span>
+            <span class="post-date" title="2021-05-26 20:40:46">2021/05/26</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/04/15/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9%E5%8C%BA%E5%9D%97%E5%90%8C%E6%AD%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9区块同步源码解析">以太坊1.9区块同步源码解析</span>
+            <span class="post-date" title="2021-04-15 11:34:01">2021/04/15</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/03/18/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9consensus%E5%8C%85%E8%A7%A3%E6%9E%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9consensus包解析">以太坊1.9consensus包解析</span>
+            <span class="post-date" title="2021-03-18 16:31:11">2021/03/18</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2021/03/11/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A1.9%E6%8C%96%E7%9F%BF%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊1.9挖矿启动过程源码阅读">以太坊1.9挖矿启动过程源码阅读</span>
+            <span class="post-date" title="2021-03-11 10:57:33">2021/03/11</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2021/02/25/linux/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="git常用命令记录">git常用命令记录</span>
+            <span class="post-date" title="2021-02-25 19:14:01">2021/02/25</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2021/02/13/fabric/fabric%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric常用命令">fabric常用命令</span>
+            <span class="post-date" title="2021-02-13 21:22:35">2021/02/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/12/20/golang/gin%E5%85%A5%E9%97%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gin入门">gin入门</span>
+            <span class="post-date" title="2020-12-20 22:36:19">2020/12/20</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/11/13/golang/go%20build%E7%9A%84ldflag%E5%8F%82%E6%95%B0/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="go build的ldflage参数">go build的ldflage参数</span>
+            <span class="post-date" title="2020-11-13 18:12:13">2020/11/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/11/12/golang/%E4%BD%BF%E7%94%A8gdb%E8%B0%83%E8%AF%95golang%E7%A8%8B%E5%BA%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="使用gdb调试golang程序">使用gdb调试golang程序</span>
+            <span class="post-date" title="2020-11-12 20:58:36">2020/11/12</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/10/27/linux/make%E5%8F%8Amakefile/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="make及makefile">make及makefile</span>
+            <span class="post-date" title="2020-10-27 15:16:33">2020/10/27</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/08/24/golang/%E5%88%A9%E7%94%A8reflect%E5%8C%85%E6%8A%8Astruct%E8%BD%AC-string/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="利用reflect包把struct转[]string">利用reflect包把struct转[]string</span>
+            <span class="post-date" title="2020-08-24 18:17:46">2020/08/24</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/07/18/fabric/fabric-go-sdk%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fabric-go-sdk的使用">fabric-go-sdk的使用</span>
+            <span class="post-date" title="2020-07-18 11:48:41">2020/07/18</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/07/18/fabric/fabric%E5%AD%A6%E4%B9%A0(11)%E2%80%94%E2%80%94fabric-ca%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(11)——fabric-ca的使用">fabric学习(11)——fabric-ca的使用</span>
+            <span class="post-date" title="2020-07-18 11:48:13">2020/07/18</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/07/13/linux/%E6%9F%A5%E7%9C%8B%E6%9C%BA%E5%99%A8%E9%85%8D%E7%BD%AE/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="查看机器配置">查看机器配置</span>
+            <span class="post-date" title="2020-07-13 18:11:11">2020/07/13</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2020/06/25/golang/beego%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%B7%AF%E7%94%B1%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/"
+           data-tag="beego"
+           data-author="" >
+            <span class="post-title" title="beego中设置路由的几种方式">beego中设置路由的几种方式</span>
+            <span class="post-date" title="2020-06-25 10:01:08">2020/06/25</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2020/06/11/linux/%E4%BF%AE%E6%94%B9%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%99%BB%E5%BD%95%E6%96%B9%E5%BC%8F%E4%B8%BA%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="修改亚马逊登录方式为密码登录">修改亚马逊登录方式为密码登录</span>
+            <span class="post-date" title="2020-06-11 18:01:05">2020/06/11</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/31/fabric/fabric%E5%AD%A6%E4%B9%A0(10)%E2%80%94%E2%80%94%E5%9C%A83%E4%B8%AA%E7%BB%84%E7%BB%87%E5%9F%BA%E7%A1%80%E4%B8%8A%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AAchannel/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(10)——在3个组织基础上新建一个channel">fabric学习(10)——在3个组织基础上新建一个channel</span>
+            <span class="post-date" title="2020-05-31 23:50:50">2020/05/31</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/25/fabric/fabric%E5%AD%A6%E4%B9%A0(9)%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8CouchDB%E5%8F%8A%E7%B4%A2%E5%BC%95%E7%9A%84%E6%93%8D%E4%BD%9C/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(9)——使用CouchDB及索引的操作">fabric学习(9)——使用CouchDB及索引的操作</span>
+            <span class="post-date" title="2020-05-25 13:14:51">2020/05/25</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/05/22/fabric/fabric%E5%AD%A6%E4%B9%A0(8)%E2%80%94%E2%80%94chaincode/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(8)——chaincode">fabric学习(8)——chaincode</span>
+            <span class="post-date" title="2020-05-22 15:04:56">2020/05/22</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/03/09/fabric/fabric%E5%AD%A6%E4%B9%A0(7)%E2%80%94%E2%80%94%E6%9B%B4%E6%96%B0channel%E9%85%8D%E7%BD%AE/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(7)——更新channel配置">fabric学习(7)——更新channel配置</span>
+            <span class="post-date" title="2020-03-09 20:20:10">2020/03/09</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/03/03/fabric/fabric%E5%AD%A6%E4%B9%A0(6)%E2%80%94%E2%80%94%E6%B7%BB%E5%8A%A0%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84(2)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(6)——添加组织机构(2)">fabric学习(6)——添加组织机构(2)</span>
+            <span class="post-date" title="2020-03-03 14:25:01">2020/03/03</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/26/fabric/fabric%E5%AD%A6%E4%B9%A0(5)%E2%80%94%E2%80%94%E6%B7%BB%E5%8A%A0%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84(1)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(5)——添加组织机构(1)">fabric学习(5)——添加组织机构(1)</span>
+            <span class="post-date" title="2020-02-26 19:35:11">2020/02/26</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/23/fabric/fabric%E5%AD%A6%E4%B9%A0(4)%E2%80%94%E2%80%94%E5%9C%A8%E6%96%B0%E5%88%9B%E5%BB%BA%E7%9A%84%E8%81%94%E7%9B%9F%E4%B8%AD%E5%88%9B%E5%BB%BAchannel/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(4)——在新创建的联盟中创建channel">fabric学习(4)——在新创建的联盟中创建channel</span>
+            <span class="post-date" title="2020-02-23 09:40:01">2020/02/23</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/22/fabric/fabric%E5%AD%A6%E4%B9%A0(3)%E2%80%94%E2%80%94%E5%88%9B%E5%BB%BA%E8%81%94%E7%9B%9F/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(3)——创建联盟">fabric学习(3)——创建联盟</span>
+            <span class="post-date" title="2020-02-22 15:47:48">2020/02/22</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/19/fabric/fabric%E5%AD%A6%E4%B9%A0(2)%E2%80%94%E2%80%94%E4%B8%8D%E4%BD%BF%E7%94%A8byfn%E6%90%AD%E5%BB%BAfabric%E7%BD%91%E7%BB%9C(2)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(2)——不使用byfn搭建fabric网络(2)">fabric学习(2)——不使用byfn搭建fabric网络(2)</span>
+            <span class="post-date" title="2020-02-19 13:30:01">2020/02/19</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2020/02/18/fabric/fabric%E5%AD%A6%E4%B9%A0(1)%E2%80%94%E2%80%94%E4%B8%8D%E4%BD%BF%E7%94%A8byfn%E6%90%AD%E5%BB%BAfabric%E7%BD%91%E7%BB%9C(1)/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric学习(1)——不使用byfn搭建fabric网络(1)">fabric学习(1)——不使用byfn搭建fabric网络(1)</span>
+            <span class="post-date" title="2020-02-18 11:47:58">2020/02/18</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/12/10/golang/gomod%E3%80%81govendor%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="gomod、govendor的使用">gomod、govendor的使用</span>
+            <span class="post-date" title="2019-12-10 11:46:56">2019/12/10</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2019/11/30/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BF%AE%E6%94%B9%E4%BB%A5%E5%A4%AA%E5%9D%8A%E7%9A%84%E5%9C%B0%E5%9D%80%E6%80%9D%E8%B7%AF/"
+           data-tag="以太坊"
+           data-author="" >
+            <span class="post-title" title="修改以太坊的地址思路">修改以太坊的地址思路</span>
+            <span class="post-date" title="2019-11-30 18:00:32">2019/11/30</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/11/11/%E5%8C%BA%E5%9D%97%E9%93%BE/%E9%9B%B6%E7%9F%A5%E8%AF%86%E8%AF%81%E6%98%8E/"
+           data-tag="零知识证明"
+           data-author="" >
+            <span class="post-title" title="零知识证明">零知识证明</span>
+            <span class="post-date" title="2019-11-11 21:16:00">2019/11/11</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/10/28/%E5%8C%BA%E5%9D%97%E9%93%BE/%E8%B7%AF%E5%8D%B0%E5%8D%8F%E8%AE%AE/"
+           data-tag="路印协议"
+           data-author="" >
+            <span class="post-title" title="路印协议">路印协议</span>
+            <span class="post-date" title="2019-10-28 13:31:35">2019/10/28</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/10/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%B8%89)%E8%87%AA%E5%AE%9A%E4%B9%89DeliverTx%E7%9A%84%E5%93%8D%E5%BA%94/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(三)自定义DeliverTx的响应">tendermint提供的RPC接口(三)自定义DeliverTx的响应</span>
+            <span class="post-date" title="2019-09-10 18:21:01">2019/09/10</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/09/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%BA%8C)/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(二)">tendermint提供的RPC接口(二)</span>
+            <span class="post-date" title="2019-09-09 18:09:33">2019/09/09</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/08/%E5%8C%BA%E5%9D%97%E9%93%BE/tendermint%E6%8F%90%E4%BE%9B%E7%9A%84RPC%E6%8E%A5%E5%8F%A3(%E4%B8%80)/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="tendermint提供的RPC接口(一)">tendermint提供的RPC接口(一)</span>
+            <span class="post-date" title="2019-09-08 17:54:23">2019/09/08</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2019/09/06/%E5%8C%BA%E5%9D%97%E9%93%BE/windows%E7%8E%AF%E5%A2%83%E4%BD%BF%E7%94%A8tendermint/"
+           data-tag="区块链"
+           data-author="" >
+            <span class="post-title" title="windows环境使用tendermint">windows环境使用tendermint</span>
+            <span class="post-date" title="2019-09-06 11:52:00">2019/09/06</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/08/28/golang/sync.Mutex%E4%BA%92%E6%96%A5%E9%94%81%E7%9A%84%E7%94%A8%E6%B3%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sync.Mutex互斥锁的用法">sync.Mutex互斥锁的用法</span>
+            <span class="post-date" title="2019-08-28 11:10:01">2019/08/28</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/08/24/golang/defer%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="defer的执行顺序">defer的执行顺序</span>
+            <span class="post-date" title="2019-08-24 18:30:39">2019/08/24</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/07/12/golang/Go%E8%AF%AD%E8%A8%80%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BA%93urfave-cli%E7%AE%80%E4%BB%8B/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Go语言命令行库urfave/cli简介">Go语言命令行库urfave/cli简介</span>
+            <span class="post-date" title="2019-07-12 20:49:46">2019/07/12</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2019/07/12/%E4%BB%A5%E5%A4%AA%E5%9D%8A/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E9%98%BB%E6%AD%A2%E6%97%A5%E8%9A%80%E6%94%BB%E5%87%BB/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="以太坊阻止日蚀攻击">以太坊阻止日蚀攻击</span>
+            <span class="post-date" title="2019-07-12 20:49:46">2019/07/12</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/05/23/golang/golang%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="golang时间戳转换">golang时间戳转换</span>
+            <span class="post-date" title="2019-05-23 14:32:13">2019/05/23</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/02/28/golang/Go%E8%A7%84%E8%8C%83/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Go规范">Go规范</span>
+            <span class="post-date" title="2019-02-28 11:30:10">2019/02/28</span>
+        </a>
+        
+        <a  class="全部文章 golang "
+           href="/2019/01/11/golang/fmt%E6%A0%BC%E5%BC%8F%E5%8D%A0%E4%BD%8D%E7%AC%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="fmt格式占位符">fmt格式占位符</span>
+            <span class="post-date" title="2019-01-11 15:41:31">2019/01/11</span>
+        </a>
+        
+        <a  class="全部文章 以太坊 "
+           href="/2018/09/14/%E4%BB%A5%E5%A4%AA%E5%9D%8A/solidity%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/"
+           data-tag="以太坊"
+           data-author="" >
+            <span class="post-title" title="solidity知识点总结">solidity知识点总结</span>
+            <span class="post-date" title="2018-09-14 21:24:04">2018/09/14</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/07/11/%E5%8C%BA%E5%9D%97%E9%93%BE/PBFT%E6%AF%8F%E4%B8%AA%E6%AD%A5%E9%AA%A4%E7%9A%84%E8%AF%A6%E7%BB%86%E6%B6%88%E6%81%AF%E8%A6%81%E7%B4%A0%E5%92%8C%E7%AD%BE%E5%90%8D%E5%86%85%E5%AE%B9/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="PBFT每个步骤的详细消息要素和签名内容">PBFT每个步骤的详细消息要素和签名内容</span>
+            <span class="post-date" title="2018-07-11 16:03:46">2018/07/11</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/05/21/%E5%8C%BA%E5%9D%97%E9%93%BE/%E6%AF%94%E7%89%B9%E5%B8%81%E4%BB%A5%E5%A4%AA%E5%9D%8Aeos%E5%9C%B0%E5%9D%80%E7%94%9F%E6%88%90/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="比特币以太坊eos地址生成">比特币以太坊eos地址生成</span>
+            <span class="post-date" title="2018-05-21 15:06:12">2018/05/21</span>
+        </a>
+        
+        <a  class="全部文章 fabric "
+           href="/2018/04/03/fabric/fabric%E6%A3%80%E6%9F%A5%E7%82%B9(checkpoint)%E5%88%86%E6%9E%90/"
+           data-tag="fabric"
+           data-author="" >
+            <span class="post-title" title="fabric检查点(checkpoint)分析">fabric检查点(checkpoint)分析</span>
+            <span class="post-date" title="2018-04-03 11:27:55">2018/04/03</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/03/28/%E5%8C%BA%E5%9D%97%E9%93%BE/%E5%90%84%E7%A7%8D%E4%B8%BB%E6%B5%81%E9%93%BE%E7%9A%84HASH%E7%AE%97%E6%B3%95%E3%80%81PKI%E5%8F%8A%E7%A7%98%E9%92%A5%E9%95%BF%E5%BA%A6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="各种主流链的HASH算法、PKI及秘钥长度">各种主流链的HASH算法、PKI及秘钥长度</span>
+            <span class="post-date" title="2018-03-28 19:17:47">2018/03/28</span>
+        </a>
+        
+        <a  class="全部文章 区块链 "
+           href="/2018/03/22/%E5%8C%BA%E5%9D%97%E9%93%BE/%E6%AF%94%E7%89%B9%E5%B8%81%E3%80%81%E4%BB%A5%E5%A4%AA%E5%9D%8A%E3%80%81%E6%AF%94%E7%89%B9%E8%82%A1%E6%97%B6%E9%97%B4%E8%AF%AF%E5%B7%AE%E5%A4%84%E7%90%86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="比特币、以太坊、比特股时间误差处理">比特币、以太坊、比特股时间误差处理</span>
+            <span class="post-date" title="2018-03-22 16:29:07">2018/03/22</span>
+        </a>
+        
+        <a  class="全部文章 linux "
+           href="/2017/07/11/linux/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="linux常用命令记录">linux常用命令记录</span>
+            <span class="post-date" title="2017-07-11 17:15:21">2017/07/11</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2017/05/23/%E6%95%B0%E6%8D%AE%E5%BA%93/orcale%E5%88%A0%E9%99%A4%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E4%B8%8B%E6%89%80%E6%9C%89%E7%9A%84%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="orcale删除当前用户下所有的表">orcale删除当前用户下所有的表</span>
+            <span class="post-date" title="2017-05-23 15:44:01">2017/05/23</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2017/04/19/%E6%95%B0%E6%8D%AE%E5%BA%93/oracle%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="oracle控制台常用命令">oracle控制台常用命令</span>
+            <span class="post-date" title="2017-04-19 17:17:09">2017/04/19</span>
+        </a>
+        
+        <a  class="全部文章 数据库 "
+           href="/2016/10/25/%E6%95%B0%E6%8D%AE%E5%BA%93/sqlserver%E8%A7%A3%E5%86%B3%E9%94%81%E8%A1%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="sqlserver解决锁表">sqlserver解决锁表</span>
+            <span class="post-date" title="2016-10-25 10:21:43">2016/10/25</span>
+        </a>
+        
+        <a  class="全部文章 java "
+           href="/2016/10/20/java/eclipse%E6%93%8D%E4%BD%9C/"
+           data-tag="java"
+           data-author="" >
+            <span class="post-title" title="eclipse操作">eclipse操作</span>
+            <span class="post-date" title="2016-10-20 11:07:48">2016/10/20</span>
+        </a>
+        
+        <a  class="全部文章 java "
+           href="/2016/08/25/java/keytool%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6%E8%AF%B7%E6%B1%82%E6%96%87%E4%BB%B6(.csr)/"
+           data-tag="java"
+           data-author="" >
+            <span class="post-title" title="keytool生成证书请求文件（.csr）">keytool生成证书请求文件（.csr）</span>
+            <span class="post-date" title="2016-08-25 13:07:48">2016/08/25</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-区块链/陆羽协议2-同构多链互相访问" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">陆羽协议2-同构多链互相访问</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="区块链">区块链</a>
+            
+        </span>
+        
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2022-06-16 22:45:25'>2022-02-11 17:47</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:4.4k</span>
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>第二步-同构多链互相访问：2台机器部署2个fabric网络，使用陆羽协议访问彼此的区块链并发送交易</p>
+<p>实现的结构图如下及调用路径如下：</p>
+<p><img src="data:image/png;base64,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"></p>
+<p>切换到102服务器：<br>下载router源码</p>
+<pre><code>cd /root/java/
+git clone https://gitee.com/luyu-community/router.git
+</code></pre>
+<p>编译</p>
+<pre><code>cd router
+gradle assemble 
+</code></pre>
+<p>生成证书</p>
+<p>切换到101服务器<br>由于102的router是想要与101的router相连，所以要使用同一个根证书生成新的证书，先在101生成证书并发送到102:<br>每个fabric相对于本机的配置是相同的，因此不需要修改ipfile文件</p>
+<pre><code>cd /root/java/router/dist
+sh  build_router.sh -n payment2 -f ipfile -o config-102 -c routers/cert/
+scp -r config-102 root@192.168.92.102:/root/java/router/dist/routers
+</code></pre>
+<p>安装router</p>
+<p>切换回102服务器</p>
+<p>安装fabric插件</p>
+<pre><code>cd /root/java/                                            
+git clone https://gitee.com/luyu-community/fabric-plugin.git
+cd fabric-plugin
+gradle assemble
+</code></pre>
+<p>在/root/java/fabric-plugin/dist/apps目录下生成fabric1-stub-2.0.0-rc1.jar</p>
+<p>回到router项目，把编译生成的插件放置于router的plugins目录下</p>
+<pre><code>cp /root/java/fabric-plugin/dist/apps/fabric1-stub-2.0.0-rc1.jar /root/java/router/dist/routers/127.0.0.1-8250-25500/plugin/
+</code></pre>
+<p>新建目录并进入（fabric102代表我虚拟机的ip尾数）：</p>
+<pre><code>mkdir -p /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102
+cd /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102
+</code></pre>
+<p>执行：</p>
+<pre><code>vi plugin.toml
+</code></pre>
+<pre><code>[common]
+    name = &#39;fabric102&#39;
+    type = &#39;Fabric1.4&#39;
+</code></pre>
+<pre><code>touch driver.toml
+</code></pre>
+<pre><code>vi connection.toml
+</code></pre>
+<pre><code>[fabricServices]
+    channelName = &#39;mychannel&#39;
+    orgUserName = &#39;fabric_admin&#39;
+    ordererTlsCaFile = &#39;orderer-tlsca.crt&#39;
+    ordererAddress = &#39;grpcs://localhost:7050&#39;
+
+[orgs]
+    [orgs.Org1]
+        tlsCaFile = &#39;org1-tlsca.crt&#39;
+        adminName = &#39;fabric_admin_org1&#39; # 配置方式与fabric_admin相同
+        endorsers = [&#39;grpcs://localhost:7051&#39;]
+
+[orgs.Org2]
+    tlsCaFile = &#39;org2-tlsca.crt&#39;
+    adminName = &#39;fabric_admin_org2&#39; # 配置方式与fabric_admin相同，但account.toml 中的mspid为Org2MSP
+    endorsers = [&#39;grpcs://localhost:9051&#39;]
+</code></pre>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/
+</code></pre>
+<p>目录下执行</p>
+<pre><code>mkdir fabric_admin fabric_admin_org1 fabric_admin_org2
+</code></pre>
+<pre><code>vi fabric_admin/account.toml
+</code></pre>
+<pre><code>[account]
+    type = &#39;Fabric1.4&#39;
+    mspid = &#39;Org1MSP&#39; 
+    keystore = &#39;account.key&#39;
+    signcert = &#39;account.crt&#39;
+</code></pre>
+<pre><code>vi fabric_admin_org1/account.toml
+</code></pre>
+<pre><code>[account]
+    type = &#39;Fabric1.4&#39;
+    mspid = &#39;Org1MSP&#39; 
+    keystore = &#39;account.key&#39;
+    signcert = &#39;account.crt&#39;
+</code></pre>
+<pre><code>vi fabric_admin_org2/account.toml
+</code></pre>
+<pre><code>[account]
+    type = &#39;Fabric1.4&#39;
+    mspid = &#39;Org2MSP&#39;  # 此处不同
+    keystore = &#39;account.key&#39;
+    signcert = &#39;account.crt&#39;
+</code></pre>
+<p>​<br>拷贝证书：</p>
+<p>连接排序节点的根证书</p>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102/orderer-tlsca.crt
+</code></pre>
+<p>连接org1的背书节点的根证书    </p>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102/org1-tlsca.crt
+</code></pre>
+<p>连接org2的背书节点的根证书</p>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102/org2-tlsca.crt 
+</code></pre>
+<p>org1账户证书</p>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric_admin/account.crt
+</code></pre>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric_admin_org1/account.crt
+</code></pre>
+<p>org1账户私钥</p>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk  /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric_admin/account.key
+    
+cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk  /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric_admin_org1/account.key
+</code></pre>
+<p>org2账户证书</p>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric_admin_org2/account.crt
+</code></pre>
+<p>org2账户私钥</p>
+<pre><code>cp $GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/*_sk /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric_admin_org2/account.key
+</code></pre>
+<p>完成后的目录结构:</p>
+<pre><code>tree -L 2 /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/
+</code></pre>
+<pre><code>/root/java/router/dist/routers/127.0.0.1-8251-25501/conf/accounts/
+├── fabric_admin
+│   ├── account.crt
+│   ├── account.key
+│   └── account.toml
+├── fabric_admin_org1
+│   ├── account.crt
+│   ├── account.key
+│   └── account.toml
+└── fabric_admin_org2
+    ├── account.crt
+    ├── account.key
+    └── account.toml
+</code></pre>
+<pre><code>tree /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102 -L 2
+</code></pre>
+<pre><code>/root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102
+├── connection.toml
+├── driver.toml
+├── orderer-tlsca.crt
+├── org1-tlsca.crt
+├── org2-tlsca.crt
+└── plugin.toml
+</code></pre>
+<p>router项目默认启动8250端口是只监听本机的，如果想从其他服务器访问本机的8250端口，需要修改配置文件</p>
+<pre><code>vi /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/application.toml
+</code></pre>
+<pre><code>[rpc] # rpc ip &amp; port
+    address = &#39;0.0.0.0&#39;
+    port = 8250
+
+enableSignVerify = false #改成false，后面调用的时候就可以不用签名，测试环境方便一些
+</code></pre>
+<p>启动router</p>
+<pre><code>cd /root/java/router/dist/routers
+sh start_all.sh
+</code></pre>
+<p>在/root/java/router/dist/routers/127.0.0.1-8250-25500/logs/info.log中可以看日志，可以看到</p>
+<pre><code>2021-12-02 18:27:00.299 [mainLoop] INFO  RouterHost() - Current active chains: [chain=payment2.fabric1,blockNumber=4]
+2021-12-02 18:27:00.299 [mainLoop] INFO  RouterHost() - Current active resources: payment2.fabric1.mycc
+</code></pre>
+<p>就代表着fabric网络已经纳入router管理</p>
+<p>发送：</p>
+<pre><code>curl -H &quot;Content-Type: application/json&quot; -X POST -d &#39;&#123;&quot;version&quot;: &quot;1&quot;, &quot;data&quot;:&#123;&quot;ignoreRemote&quot;: false&#125;&#125;&#39; &quot;http://localhost:8250/sys/listResources&quot;
+</code></pre>
+<p>返回链上信息</p>
+<pre><code>&#123;&quot;version&quot;:&quot;1.0.0&quot;,&quot;errorCode&quot;:0,&quot;message&quot;:&quot;Success&quot;,&quot;data&quot;:&#123;&quot;total&quot;:1,&quot;resources&quot;:[&#123;&quot;path&quot;:&quot;payment2.fabric1.mycc&quot;,&quot;type&quot;:&quot;Fabric1.4&quot;,&quot;methods&quot;:null,&quot;properties&quot;:&#123;&quot;ORG_NAMES&quot;:[&quot;Org1&quot;,&quot;Org2&quot;],&quot;PROPOSAL_WAIT_TIME&quot;:&quot;300000&quot;,&quot;CHAINCODE_VERSION&quot;:&quot;1.0&quot;,&quot;CHANNEL_NAME&quot;:&quot;mychannel&quot;,&quot;CHAINCODE_NAME&quot;:&quot;mycc&quot;&#125;&#125;]&#125;&#125;
+</code></pre>
+<p>此时还不能发送交易，因为没有配置二级账户</p>
+<p>安装account-manage</p>
+<p>接下来配置二级账户<br>编译account-manager项目</p>
+<pre><code>cd /root/java/
+git clone https://gitee.com/luyu-community/account-manager.git
+</code></pre>
+<p>编译，生成dist文件夹</p>
+<pre><code>cd account-manager
+gradle assemble
+</code></pre>
+<p>把router生成的证书拷贝到dist/conf目录下</p>
+<pre><code>cd dist
+cp /root/java/router/dist/routers/cert/account-manager/* conf/
+</code></pre>
+<p>配置文件</p>
+<pre><code>cp conf/application-sample.toml conf/application.toml
+vim conf/application.toml # 一般情况下无需编辑，采用默认配置即可
+</code></pre>
+<p>启动服务</p>
+<pre><code>bash start.sh
+</code></pre>
+<p>安装java-sdk</p>
+<p>下载luyu-java-sdk</p>
+<pre><code>cd /root/java/      
+git clone https://gitee.com/luyu-community/luyu-java-sdk.git
+</code></pre>
+<p>编译</p>
+<pre><code>cd luyu-java-sdk/
+gradle assemble 
+</code></pre>
+<pre><code>cd dist
+</code></pre>
+<p>生成一个一级账户地址</p>
+<pre><code>bash gen_account.sh
+</code></pre>
+<pre><code>[SUCCESS] Account secret key generated: 0xfca9d31bad28ca5d754652b28a9d9ada7cabdfff.key
+</code></pre>
+<p>添加二级账户</p>
+<p>由于Fabric的二级账户无法自动生成，需手动将其配置到相关一级账户下</p>
+<p>在配置了本插件的路由下执行命令</p>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500
+</code></pre>
+<pre><code>java -cp conf/:lib/*:plugin/* link.luyu.protocol.link.fabric1.tools.AddAlgAccountRequestPacketBuilder 0xfca9d31bad28ca5d754652b28a9d9ada7cabdfff payment2.fabric102 fabric_admin
+</code></pre>
+<p>得到需要请求的json：</p>
+<pre><code>&#123;
+  &quot;data&quot; : &#123;
+    &quot;luyuSign&quot; : &quot;&quot;,
+    &quot;type&quot; : &quot;ECDSA_SECP256R1_WITH_SHA256&quot;,
+    &quot;nonce&quot; : 1640068235326,
+    &quot;identity&quot; : &quot;0xfca9d31bad28ca5d754652b28a9d9ada7cabdfff&quot;,
+    &quot;pubKey&quot; : &quot;BKNRFv63jahYEMeUoFlQLnuY/7D8GsAbyUZFU9NX6qQq1Qz4AHV9PDV6WOvFTFmD2/FKJnj/923NlHsiHQT7EoE=&quot;,
+    &quot;secKey&quot; : &quot;ZfJGgdwZiDlpuf1wCGwGxsUL7FXJqmjGZIGatspXK/U=&quot;,
+    &quot;properties&quot; : &#123;
+      &quot;Fabric1.4:payment2.fabric102:name&quot; : &quot;fabric_admin&quot;,
+      &quot;Fabric1.4:payment2.fabric102:mspid&quot; : &quot;Org1MSP&quot;,
+      &quot;Fabric1.4:payment2.fabric102:cert&quot; : &quot;-----BEGIN CERTIFICATE-----\nMIICKTCCAc+gAwIBAgIQNR0imAw5wnfxLdsjqDCpeDAKBggqhkjOPQQDAjBzMQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEZMBcGA1UEChMQb3JnMS5leGFtcGxlLmNvbTEcMBoGA1UEAxMTY2Eu\nb3JnMS5leGFtcGxlLmNvbTAeFw0yMTEyMjEwNTU3MDBaFw0zMTEyMTkwNTU3MDBa\nMGsxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1T\nYW4gRnJhbmNpc2NvMQ4wDAYDVQQLEwVhZG1pbjEfMB0GA1UEAwwWQWRtaW5Ab3Jn\nMS5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABKNRFv63jahY\nEMeUoFlQLnuY/7D8GsAbyUZFU9NX6qQq1Qz4AHV9PDV6WOvFTFmD2/FKJnj/923N\nlHsiHQT7EoGjTTBLMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMCsGA1Ud\nIwQkMCKAILdoIXfTrRdnX6kgw7mPBl8bcAOe78P9cFpQ0kb6xebOMAoGCCqGSM49\nBAMCA0gAMEUCIQCF8rxoaEPHNIPRpi6EeMfRhY+qFCOnIV8lXKa7o+lIWQIgKd1Y\nzwE3J1jXhx67I5vNWZO62LFx7j8z640P1l3oL3A=\n-----END CERTIFICATE-----\n&quot;
+    &#125;,
+    &quot;isDefault&quot; : true
+  &#125;
+&#125;
+</code></pre>
+<p>将账户服务的RPC接口采用非SSL的模式，并重启账户服务</p>
+<pre><code>vim /root/java/account-manager/dist/conf/application.toml # sslOn 设置为 false
+cd /root/java/account-manager/dist/
+sh stop.sh
+sh start.sh    
+</code></pre>
+<p>调用账户服务的RPC接口，发送json</p>
+<p>Method：POST</p>
+<p>URL：<a target="_blank" rel="noopener" href="http://192.168.92.102:8340/auth/addAlgAccount">http://192.168.92.102:8340/auth/addAlgAccount</a></p>
+<p>Body：上述生成的json字段</p>
+<p>成功后data.errorCode中返回0</p>
+<pre><code>&#123;
+    &quot;version&quot;: &quot;1.0&quot;,
+    &quot;errorCode&quot;: 0,
+    &quot;message&quot;: &quot;success&quot;,
+    &quot;data&quot;: &#123;
+        &quot;errorCode&quot;: 0,
+        &quot;message&quot;: &quot;success&quot;
+    &#125;
+&#125;
+</code></pre>
+<p>调用RPC接口查询是否添加成功</p>
+<p>Method：POST</p>
+<p>URL：<a target="_blank" rel="noopener" href="http://192.168.92.102:8340/auth/listAccount">http://192.168.92.102:8340/auth/listAccount</a></p>
+<p>Body：如下，指定一级账户地址（sender）：<code>0xfca9d31bad28ca5d754652b28a9d9ada7cabdfff</code></p>
+<pre><code>&#123;
+    &quot;data&quot;:&#123;
+        &quot;luyuSign&quot;: [],
+        &quot;signData&quot;:&#123;
+            &quot;sender&quot;: &quot;0xfca9d31bad28ca5d754652b28a9d9ada7cabdfff&quot;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>可查询到已添加的二级账户</p>
+<p>调用接口</p>
+<p>将账户服务的RPC接口改回SSL模式，以便能和路由交互。此处sslOn设置成ture之后，listAccount接口就不能用了，因为开启了ssl认证</p>
+<pre><code>vim /root/java/account-manager/dist/conf/application.toml # sslOn 设置为 true
+</code></pre>
+<p>调用call接口查询mycc中a的值（postman）</p>
+<pre><code>http://192.168.92.102:8250/resource/payment2/fabric102/mycc/call
+</code></pre>
+<pre><code>&#123;
+    &quot;version&quot;:&quot;1&quot;,
+    &quot;data&quot;:&#123;
+        &quot;path&quot;: &quot;payment2.fabric102.mycc&quot;,
+        &quot;method&quot;: &quot;query&quot;,
+        &quot;args&quot;: [&quot;a&quot;],
+        &quot;nonce&quot;:123456,
+        &quot;luyuSign&quot;:&quot;&quot;,
+        &quot;sender&quot;: &quot;0xfca9d31bad28ca5d754652b28a9d9ada7cabdfff&quot;
+    &#125;
+&#125;
+</code></pre>
+<p>调用sendTransaction发送交易</p>
+<pre><code>http://192.168.92.102:8250/resource/payment2/fabric102/mycc/sendTransaction
+</code></pre>
+<pre><code>&#123;
+    &quot;version&quot;:&quot;1&quot;,
+    &quot;data&quot;:&#123;
+        &quot;path&quot;: &quot;payment2.fabric102.mycc&quot;,
+        &quot;method&quot;: &quot;invoke&quot;,
+        &quot;args&quot;: [&quot;a&quot;,&quot;b&quot;,&quot;1&quot;],
+        &quot;nonce&quot;:1,
+        &quot;luyuSign&quot;:&quot;&quot;,
+        &quot;sender&quot;: &quot;0xfca9d31bad28ca5d754652b28a9d9ada7cabdfff&quot;
+    &#125;
+&#125;
+</code></pre>
+<p>到这一步，101和102还是两座孤岛，互相运行自己的系统以及fabric网络，接下来先让两个router连接起来，可以看到对方的区块链网络</p>
+<p>连接两个网络</p>
+<p>切换到101：</p>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains 
+</code></pre>
+<pre><code>mkdir fabric102 &amp;&amp; cd fabric102
+</code></pre>
+<pre><code>vi plugin.toml
+</code></pre>
+<pre><code>[common]
+    name = &#39;fabric102&#39;
+    type = &#39;Fabric1.4&#39;
+</code></pre>
+<pre><code>vi driver.toml
+</code></pre>
+<pre><code>[verifier]
+     [verifier.endorserCA] # 机构的CA列表
+            Org1MSP = &#39;verifier/org1CA/ca.org1.example.com-cert.pem&#39; # 相对路径：验证证书所在位置的
+            Org2MSP = &#39;verifier/org2CA/ca.org2.example.com-cert.pem&#39;
+     [verifier.ordererCA] # 排序节点的CA证书
+            OrdererMSP = &#39;verifier/ordererCA/ca.example.com-cert.pem&#39;
+</code></pre>
+<pre><code>mkdir verifier &amp;&amp; cd verifier
+mkdir ordererCA org1CA org2CA
+</code></pre>
+<pre><code>scp root@192.168.92.102:/root/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/ca/ca.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102/verifier/ordererCA/
+
+scp root@192.168.92.102:/root/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102/verifier/org1CA/
+
+scp root@192.168.92.102:/root/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric102/verifier/org2CA/
+</code></pre>
+<pre><code>vi /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/application.toml
+</code></pre>
+<p>修改[p2p]标签下面的peers</p>
+<pre><code>peers = [&#39;192.168.92.102:25500&#39;]
+</code></pre>
+<p>重启router</p>
+<p>切换到102：</p>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains
+</code></pre>
+<pre><code>mkdir fabric101 &amp;&amp; cd fabric101
+</code></pre>
+<pre><code>vi plugin.toml
+</code></pre>
+<pre><code>[common]
+    name = &#39;fabric101&#39;
+    type = &#39;Fabric1.4&#39;
+</code></pre>
+<pre><code>vi driver.toml
+</code></pre>
+<pre><code>[verifier]
+     [verifier.endorserCA] # 机构的CA列表
+            Org1MSP = &#39;verifier/org1CA/ca.org1.example.com-cert.pem&#39; # 相对路径：验证证书所在位置的
+            Org2MSP = &#39;verifier/org2CA/ca.org2.example.com-cert.pem&#39;
+     [verifier.ordererCA] # 排序节点的CA证书
+            OrdererMSP = &#39;verifier/ordererCA/ca.example.com-cert.pem&#39;
+</code></pre>
+<pre><code>mkdir verifier &amp;&amp; cd verifier
+mkdir ordererCA org1CA org2CA
+</code></pre>
+<pre><code>scp root@192.168.92.101:/root/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/ca/ca.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric101/verifier/ordererCA/
+
+scp root@192.168.92.101:/root/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric101/verifier/org1CA/
+
+scp root@192.168.92.101:/root/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/chains/fabric101/verifier/org2CA/
+</code></pre>
+<pre><code>vi /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/application.toml
+</code></pre>
+<p>修改[p2p]标签下面的peers</p>
+<pre><code>peers = [&#39;192.168.92.101:25500&#39;]
+</code></pre>
+<p>重启router</p>
+<p>可以看到后台日志：</p>
+<pre><code>Current active chains: [chain=payment2.fabric102,blockNumber=7], [chain=payment2.fabric101,blockNumber=10]
+Current active resources: payment2.fabric102.mycc, payment2.fabric101.mycc
+</code></pre>
+<p>表示两个router已经连上了</p>
+<p>现在还不能完成从101服务器调用fabric102<br>想要实现router101调用fabric102，就要在router101下配置fabric102的账户证书文件，有两种方式。</p>
+<p>方法1：在一个一级账户下管理多个二级账户，但是两个二级账户有其中一个是default属性，使用其中一个账户无法调用另一个账户所属链，而切换default账户需要设置account-manage的ssl属性并重启。</p>
+<p>方法2：生成两个一级账户，不同的一级账户各自管理不同的二级账户，这样在调用时，只需要切换sender就可以了</p>
+<p>一个二级账户不能同时纳入两个一级账户管理，所以两个方法只能二选一</p>
+<p><strong>方法1：</strong><br>现在要在101的机器上配置fabric102账户，才能在101的router调用fabric102</p>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/
+</code></pre>
+<pre><code>mkdir fabric102_admin 
+</code></pre>
+<pre><code>vi fabric102_admin/account.toml
+</code></pre>
+<pre><code>[account]
+    type = &#39;Fabric1.4&#39;
+    mspid = &#39;Org1MSP&#39; 
+    keystore = &#39;account.key&#39;
+    signcert = &#39;account.crt&#39;
+</code></pre>
+<p>102的account证书拷贝过来</p>
+<pre><code>scp root@192.168.92.102:$GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk  /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric102_admin/account.key
+
+scp root@192.168.92.102:$GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric102_admin/account.crt
+</code></pre>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500
+</code></pre>
+<pre><code>java -cp conf/:lib/*:plugin/* link.luyu.protocol.link.fabric1.tools.AddAlgAccountRequestPacketBuilder 0x1dfa97d759404d8b6400c26207adcc17d6f8363d payment2.fabric102 fabric102_admin
+</code></pre>
+<p>得到：</p>
+<pre><code>&#123;
+  &quot;data&quot; : &#123;
+    &quot;luyuSign&quot; : &quot;&quot;,
+    &quot;type&quot; : &quot;ECDSA_SECP256R1_WITH_SHA256&quot;,
+    &quot;nonce&quot; : 1639117425628,
+    &quot;identity&quot; : &quot;0x1dfa97d759404d8b6400c26207adcc17d6f8363d&quot;,
+    &quot;pubKey&quot; : &quot;BDaGM5omtQhQemOF+7oTC+7hkcqwpuE+mYbwzw4Kgkswt3tprgWKx1Cqfkx3GHBcGAEcKlpU51d3S2wvckVTfoo=&quot;,
+    &quot;secKey&quot; : &quot;APKyhboHQzhWHzaY/F1I8XV5ini1ZaO/iDyDOFmfL4RF&quot;,
+    &quot;properties&quot; : &#123;
+      &quot;Fabric1.4:payment2.fabric102:name&quot; : &quot;fabric102_admin&quot;,
+      &quot;Fabric1.4:payment2.fabric102:mspid&quot; : &quot;Org1MSP&quot;,
+      &quot;Fabric1.4:payment2.fabric102:cert&quot; : &quot;-----BEGIN CERTIFICATE-----\nMIICKTCCAdCgAwIBAgIRALYU1Cx69F0+YyIPrLXMGicwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMjExMjA2MDYzOTAwWhcNMzExMjA0MDYzOTAw\nWjBrMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEOMAwGA1UECxMFYWRtaW4xHzAdBgNVBAMMFkFkbWluQG9y\nZzEuZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQ2hjOaJrUI\nUHpjhfu6Ewvu4ZHKsKbhPpmG8M8OCoJLMLd7aa4FisdQqn5MdxhwXBgBHCpaVOdX\nd0tsL3JFU36Ko00wSzAOBgNVHQ8BAf8EBAMCB4AwDAYDVR0TAQH/BAIwADArBgNV\nHSMEJDAigCBJBZqB9vyILQBRmEc0D2c9gg9oQawJdkaw2eZ5ITWyEjAKBggqhkjO\nPQQDAgNHADBEAiB/G3T6KxesQj9uvPH/ua72KZXzLEGjrhysnGD4IqEUwAIgccDx\nJvVZ674WSoZdY5UkoQ+pWhyEVa1VQV5Tb+R8hQw=\n-----END CERTIFICATE-----\n&quot;
+    &#125;,
+    &quot;isDefault&quot; : true
+  &#125;
+&#125;
+</code></pre>
+<p>将account-manage的RPC接口采用非SSL的模式，并重启账户服务</p>
+<p>调用账户服务的RPC接口，发送json</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.92.101:8340/auth/addAlgAccount">http://192.168.92.101:8340/auth/addAlgAccount</a></p>
+<p>Body：上述生成的json字段</p>
+<p>返回success</p>
+<p>调用<code>http://192.168.92.101:8340/auth/listAccount</code>查看是否添加成功<br>能够看到fabric102_admin所属的账户isDefault的属性被设置成了true，而原本fabric_admin的账户的isDefault属性被设置成了false</p>
+<p>成功后，将账户服务的RPC接口改回SSL模式，向101服务器发请求，去调用102的链，注意修改路径：</p>
+<pre><code>http://192.168.92.101:8250/resource/payment2/fabric102/mycc/call 
+</code></pre>
+<pre><code>&#123;
+    &quot;version&quot;:&quot;1&quot;,
+    &quot;data&quot;:&#123;
+        &quot;path&quot;: &quot;payment2.fabric102.mycc&quot;,
+        &quot;method&quot;: &quot;query&quot;,
+        &quot;args&quot;: [&quot;a&quot;],
+        &quot;nonce&quot;:123456,
+        &quot;luyuSign&quot;:&quot;&quot;,
+        &quot;sender&quot;: &quot;0x1dfa97d759404d8b6400c26207adcc17d6f8363d&quot;
+    &#125;
+&#125;
+</code></pre>
+<p>可以成功返回，再试试调用sendTransaction接口，注意修改路径</p>
+<pre><code>http://192.168.92.101:8250/resource/payment2/fabric102/mycc/sendTransaction
+</code></pre>
+<pre><code>&#123;
+    &quot;version&quot;:&quot;1&quot;,
+    &quot;data&quot;:&#123;
+        &quot;path&quot;: &quot;payment2.fabric102.mycc&quot;,
+        &quot;method&quot;: &quot;invoke&quot;,
+        &quot;args&quot;: [&quot;a&quot;,&quot;b&quot;,&quot;1&quot;],
+        &quot;nonce&quot;:1,
+        &quot;luyuSign&quot;:&quot;&quot;,
+        &quot;sender&quot;: &quot;0x1dfa97d759404d8b6400c26207adcc17d6f8363d&quot;
+    &#125;
+&#125;
+</code></pre>
+<p>返回success后，再去调用call接口确认一下</p>
+<p>如果想再去调用fabric101，发现会报错：<code>“Fabric account has not been added”</code><br>这是因为新添加的账户被设置成了default账户，可以调用下面接口去切换default账户</p>
+<pre><code>http://192.168.92.101:8340/auth/setDefaultAlgAccount
+</code></pre>
+<pre><code>&#123;
+  &quot;data&quot;: &#123;
+    &quot;luyuSign&quot;: &quot;&quot;,
+    &quot;type&quot;: &quot;ECDSA_SECP256R1_WITH_SHA256&quot;,
+    &quot;nonce&quot;: 123,
+    &quot;identity&quot;: &quot;0xabcdef&quot;, #一级账户地址
+    &quot;keyID&quot;: 0 #二级账户id
+  &#125;
+&#125;
+</code></pre>
+<p>这种方式太过繁琐，因为需要修改account-manage的配置文件，并且重启数次</p>
+<p><strong>方法2：</strong></p>
+<p>可以使用<strong>多个一级账户</strong>管理不同的二级账户的方式，来实现对不同链的调用，在每次调用时，切换sender地址即可。</p>
+<pre><code>cd /root/java/luyu-java-sdk/dist
+</code></pre>
+<pre><code>bash gen_account.sh
+</code></pre>
+<p>生成一个新的一级账户 <code>0x346be6fc044cfa03000bf2f5ea906a761c6ae843</code></p>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/
+</code></pre>
+<pre><code>mkdir fabric102_admin
+</code></pre>
+<pre><code>vi fabric102_admin/account.toml
+</code></pre>
+<pre><code>[account]
+    type = &#39;Fabric1.4&#39;
+    mspid = &#39;Org1MSP&#39; 
+    keystore = &#39;account.key&#39;
+    signcert = &#39;account.crt&#39;
+</code></pre>
+<pre><code>scp root@192.168.92.102:$GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk  /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric102_admin/account.key
+
+scp root@192.168.92.102:$GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric102_admin/account.crt
+</code></pre>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500
+java -cp conf/:lib/*:plugin/* link.luyu.protocol.link.fabric1.tools.AddAlgAccountRequestPacketBuilder 0x346be6fc044cfa03000bf2f5ea906a761c6ae843 payment2.fabric102 fabric102_admin
+</code></pre>
+<p>设置ssl证书为false后，调用addAlgAccount</p>
+<pre><code>&#123;
+  &quot;data&quot; : &#123;
+    &quot;luyuSign&quot; : &quot;&quot;,
+    &quot;type&quot; : &quot;ECDSA_SECP256R1_WITH_SHA256&quot;,
+    &quot;nonce&quot; : 1639127916462,
+    &quot;identity&quot; : &quot;0x346be6fc044cfa03000bf2f5ea906a761c6ae843&quot;,
+    &quot;pubKey&quot; : &quot;BF0OjgRN4AGmWrezxX8aY+D4DmcVYo2ca/p1LlRmoPiK809n4GQJNuzN4X0O54fHAmgJV4dd8UZaWhiGInmjWIw=&quot;,
+    &quot;secKey&quot; : &quot;APegol7W+Ofxn0TjR+LgLPN0279oFtAXj7qzN0/9B0ap&quot;,
+    &quot;properties&quot; : &#123;
+      &quot;Fabric1.4:payment2.fabric102:name&quot; : &quot;fabric102_admin&quot;,
+      &quot;Fabric1.4:payment2.fabric102:mspid&quot; : &quot;Org1MSP&quot;,
+      &quot;Fabric1.4:payment2.fabric102:cert&quot; : &quot;-----BEGIN CERTIFICATE-----\nMIICKDCCAc+gAwIBAgIQJDZsf5pCMt5++dsPXbwy8DAKBggqhkjOPQQDAjBzMQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEZMBcGA1UEChMQb3JnMS5leGFtcGxlLmNvbTEcMBoGA1UEAxMTY2Eu\nb3JnMS5leGFtcGxlLmNvbTAeFw0yMTEyMTAwNzM3MDBaFw0zMTEyMDgwNzM3MDBa\nMGsxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1T\nYW4gRnJhbmNpc2NvMQ4wDAYDVQQLEwVhZG1pbjEfMB0GA1UEAwwWQWRtaW5Ab3Jn\nMS5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABF0OjgRN4AGm\nWrezxX8aY+D4DmcVYo2ca/p1LlRmoPiK809n4GQJNuzN4X0O54fHAmgJV4dd8UZa\nWhiGInmjWIyjTTBLMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMCsGA1Ud\nIwQkMCKAIPZ8ilacNvCkiDf+LRVoXNGf2gB+eA4i6zPJbM0zk9HOMAoGCCqGSM49\nBAMCA0cAMEQCID11BuOOB309nDME9B7+dmXxUH+avtxEdtcqVLMMadfJAiBXt9xM\nDaKXBvfC21KRar7dRgEZ3l7uB3NQaMBKzmNSfg==\n-----END CERTIFICATE-----\n&quot;
+    &#125;,
+    &quot;isDefault&quot; : true
+  &#125;
+&#125;
+</code></pre>
+<p>到这里，已经可以调用101的router接口访问fabric101和fabric102网络</p>
+<p>102添加二级账户方式同理，不再赘述，简单记录一下命令</p>
+<pre><code>cd /root/java/luyu-java-sdk/dist
+bash gen_account.sh
+</code></pre>
+<p>生成一个新的一级账户 <code>0x7bbe2de276e57e7f4901a7b834e0934143f5f073</code></p>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/
+mkdir fabric101_admin
+</code></pre>
+<pre><code>vi fabric101_admin/account.toml
+</code></pre>
+<pre><code>[account]
+    type = &#39;Fabric1.4&#39;
+    mspid = &#39;Org1MSP&#39; 
+    keystore = &#39;account.key&#39;
+    signcert = &#39;account.crt&#39;
+</code></pre>
+<pre><code>scp root@192.168.92.101:$GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/*_sk  /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric101_admin/account.key
+
+scp root@192.168.92.101:$GOPATH/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem /root/java/router/dist/routers/127.0.0.1-8250-25500/conf/accounts/fabric101_admin/account.crt
+</code></pre>
+<pre><code>cd /root/java/router/dist/routers/127.0.0.1-8250-25500
+</code></pre>
+<pre><code>java -cp conf/:lib/*:plugin/* link.luyu.protocol.link.fabric1.tools.AddAlgAccountRequestPacketBuilder 0x7bbe2de276e57e7f4901a7b834e0934143f5f073 payment1.fabric101 fabric101_admin
+</code></pre>
+<p>设置<code>ssl</code>证书为<code>false</code>后，调用<code>addAlgAccount</code></p>
+<pre><code>&#123;
+  &quot;data&quot; : &#123;
+    &quot;luyuSign&quot; : &quot;&quot;,
+    &quot;type&quot; : &quot;ECDSA_SECP256R1_WITH_SHA256&quot;,
+    &quot;nonce&quot; : 1639469184477,
+    &quot;identity&quot; : &quot;0x7bbe2de276e57e7f4901a7b834e0934143f5f073&quot;,
+    &quot;pubKey&quot; : &quot;BBzoEgIvT0aChexixrHrWRFC38mY/X/Rc8RQr0RIi9MH7F5uOagTdjSRgu7BBp8UN1vUIBjZxWIqK5gbWR0rQPI=&quot;,
+    &quot;secKey&quot; : &quot;ZsfaGPJyOrjW3g5ymoGHGldZbNbOTJVp3jamAc2Z2zs=&quot;,
+    &quot;properties&quot; : &#123;
+      &quot;Fabric1.4:payment1.fabric101:cert&quot; : &quot;-----BEGIN CERTIFICATE-----\nMIICKTCCAdCgAwIBAgIRAIYI5mQWM5XGrVo9UrykoLYwCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMjExMjEwMDczNjAwWhcNMzExMjA4MDczNjAw\nWjBrMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEOMAwGA1UECxMFYWRtaW4xHzAdBgNVBAMMFkFkbWluQG9y\nZzEuZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQc6BICL09G\ngoXsYsax61kRQt/JmP1/0XPEUK9ESIvTB+xebjmoE3Y0kYLuwQafFDdb1CAY2cVi\nKiuYG1kdK0Dyo00wSzAOBgNVHQ8BAf8EBAMCB4AwDAYDVR0TAQH/BAIwADArBgNV\nHSMEJDAigCDFGXEd4czKARLr7jOCwRnw8A+p5Do9CJudFGgHPQ6S1zAKBggqhkjO\nPQQDAgNHADBEAiBlabjSFOZDCcBxuqdmrR4noPBOaTskt64T/QOxqX8RJQIgNsHi\nx4x8pLUjAf7hOu0WQEel06/QKegmC+kjpM6av8I=\n-----END CERTIFICATE-----\n&quot;,
+      &quot;Fabric1.4:payment1.fabric101:name&quot; : &quot;fabric101_admin&quot;,
+      &quot;Fabric1.4:payment1.fabric101:mspid&quot; : &quot;Org1MSP&quot;
+    &#125;,
+    &quot;isDefault&quot; : true
+  &#125;
+&#125;
+</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2017 caohuan
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
